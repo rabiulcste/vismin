@@ -52,20 +52,22 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Academic Project Page</h1>
+            <h1 class="title is-1 publication-title">VisMin: Visual Minimal-Change Understanding</h1>
             <div class="is-size-5 publication-authors">
               <!-- Paper authors -->
               <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">First Author</a><sup>*</sup>,</span>
+                <a href="https://rabiul.me/" target="_blank">Rabiul Awal</a><sup>*</sup>,</span>
                 <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Second Author</a><sup>*</sup>,</span>
+                  <a href="https://zhangle.netlify.app/" target="_blank">Le Zhang</a><sup>*</sup>,</span>
+                <span class="author-block">
+                  <a href="https://mila.quebec/en/saba-ahmadi" target="_blank">Saba Ahmadi</a><sup>*</sup>,</span>
                   <span class="author-block">
-                    <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Third Author</a>
+                    <a href="https://www.iro.umontreal.ca/~agrawal/" target="_blank">Aishwarya Agrawal</a>
                   </span>
                   </div>
 
                   <div class="is-size-5 publication-authors">
-                    <span class="author-block">Institution Name<br>Conferance name and year</span>
+                    <span class="author-block">Mila - Quebec AI Institute<br>Preprint</span>
                     <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution</small></span>
                   </div>
 
@@ -73,7 +75,7 @@
                     <div class="publication-links">
                          <!-- Arxiv PDF link -->
                       <span class="link-block">
-                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
+                        <a href="https://drive.google.com/file/d/17MBgqWwxOD2ZVEs-50wRB_dmaDwUWa47/view?usp=drive_link" target="_blank"
                         class="external-link button is-normal is-rounded is-dark">
                         <span class="icon">
                           <i class="fas fa-file-pdf"></i>
@@ -127,13 +129,9 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <video poster="" id="tree" autoplay controls muted loop height="100%">
-        <!-- Your video here -->
-        <source src="static/videos/banner_video.mp4"
-        type="video/mp4">
-      </video>
+      <img src="static/images/example.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
       <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
+        Overview of our \bench benchmark. \bench consists of four types of minimal-changes -- object, attribute, count and spatial relation -- between two image-captions pairs. The evaluation task requires a model to predict the correct image-caption match given: 1) two images and one caption, 2) two captions and one image.
       </h2>
     </div>
   </div>
@@ -148,7 +146,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ullamcorper tellus sed ante aliquam tempus. Etiam porttitor urna feugiat nibh elementum, et tempor dolor mattis. Donec accumsan enim augue, a vulputate nisi sodales sit amet. Proin bibendum ex eget mauris cursus euismod nec et nibh. Maecenas ac gravida ante, nec cursus dui. Vivamus purus nibh, placerat ac purus eget, sagittis vestibulum metus. Sed vestibulum bibendum lectus gravida commodo. Pellentesque auctor leo vitae sagittis suscipit.
+            Fine-grained understanding of objects, attributes, and relationships between objects is crucial for visual-language models (VLMs). To evaluate VLMs' fine-grained understanding, existing benchmarks primarily focus on evaluating VLMs' capability to distinguish between two very similar captions given an image. In this paper, our focus is on evaluating VLMs' capability to distinguish between two very similar images given a caption. To this end, we introduce a new, challenging benchmark termed Visual Minimal-Change Understanding (VisMin), which requires models to predict the correct image-caption match given two images and two captions. Importantly, the image pair (as well as the caption pair) contains minimal changes, i.e., between the two images (as well as between the two captions), only one aspect changes at a time from among the following possible types of changes: object, attribute, count, and spatial relation. These four types of minimal changes are specifically designed to test the models' understanding of objects, attributes of objects (such as color, material, shape), counts of objects, and spatial relationships between objects. To curate our benchmark, we built an automatic pipeline using large language models and diffusion models, followed by a rigorous 4-step verification process by human annotators. Empirical experiments reveal that current VLMs exhibit notable deficiencies in understanding spatial relationships and counting abilities. Furthermore, leveraging the automated nature of our data creation process, we generate a large-scale training dataset, which we use to finetune CLIP (a foundational VLM) and Idefics2 (a multimodal large language model). Our findings show that both these models benefit significantly from fine-tuning on this data, as evident by marked improvements in fine-grained understanding across a wide range of benchmarks. Additionally, such fine-tuning improves CLIP's general image-text alignment capabilities too. All resources including the benchmark, the training data, and the finetuned model checkpoints will be released.
           </p>
         </div>
       </div>
@@ -156,6 +154,391 @@
   </div>
 </section>
 <!-- End paper abstract -->
+
+<!-- Overview pipeline-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Minimal-Change Image-Text Dataset Creation</h2>
+    <div class="hero-body">
+      <img src="static/images/pipeline.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
+      <h2 class="subtitle has-text-centered">
+        Our dataset creation pipeline includes three stages:
+      </h2>
+      <ol style="margin-top: 0; padding-left: 1.5em;">
+        <li><strong>Image Synthesis:</strong> We develop methods for synthesizing images involving Objects & Attributes and Counting & Spatial Relations.</li>
+        <li><strong>Automatic Filtering:</strong> An LLM generates questions and answers based on captions, and a VQA model predicts answers from images. Images are excluded if answers don't match.</li>
+        <li><strong>Human Verification:</strong> Synthetic data undergoes a rigorous 4-steps human verification, and only examples passing all stages are included in the benchmark.</li>
+      </ol>    
+    </div>
+  </div>
+</section>
+<!-- End overview pipeline -->
+
+<!-- VisMin Benchmark -->
+<section class="section hero is-light">
+  <div class="container">
+    <h2 class="title is-3">Training and Benchmark sets</h2>
+
+    <p>This study aims to enhance fine-grained understanding in VLMs by creating training and benchmark sets. The training data is auto-filtered and scalable, while the benchmark data undergoes rigorous human verification for quality. The training data is sourced from VSR and the COCO 2017 training split, while the benchmark data comes from the COCO 2017 validation split. This ensures benchmark images are unseen during training. The training dataset has 64,392 samples, and the VisMin dataset has 2,084 samples. The study aimed for a balanced benchmark across categories, but attribute samples in the benchmark are relatively low due to limitations in suggested edits. The study provides an overview of the types of changes in the benchmark and detailed information on training set subcategories.</p>
+    <div style="display: flex; justify-content: center;">
+      <img src="static/images/training_distribution.png" alt="VisMin Benchmark" style="width:30%; height:auto; margin-right: 5%;">
+      <img src="static/images/VisMin_distribution.png" alt="VisMin Benchmark" style="width:30%; height:auto; margin-left: 5%;">
+    </div>
+  </div>
+</section>
+
+<!-- VisMin Results -->
+<section class="section hero is-light">
+  <div class="container">
+    <h2 class="title is-3">Zero-shot Performance on the VisMin Benchmark</h2>
+    <div class="table-wrapper">
+      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <thead class="center">
+          <tr class="oddrow">
+            <th></th>
+            <th colspan="3">Object</th>
+            <th colspan="3">Attribute</th>
+            <th colspan="3">S. Relation</th>
+            <th colspan="3">Count</th>
+            <th rowspan="2">AVG</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+          </tr>
+        </thead>
+        <tbody class="center">
+          <tr class="oddrow">
+            <td style="text-align: left;">Random Chance</td>
+            <td>25</td>
+            <td>25</td>
+            <td>16.67</td>
+            <td>25</td>
+            <td>25</td>
+            <td>16.67</td>
+            <td>25</td>
+            <td>25</td>
+            <td>16.67</td>
+            <td>25</td>
+            <td>25</td>
+            <td>16.67</td>
+            <td>22.22</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">MTurk Human</td>
+            <td>86.87</td>
+            <td>95.50</td>
+            <td>83.07</td>
+            <td>82.31</td>
+            <td>91.15</td>
+            <td>76.87</td>
+            <td>81.67</td>
+            <td>92.76</td>
+            <td>76.20</td>
+            <td>88.96</td>
+            <td>96.77</td>
+            <td>86.41</td>
+            <td>86.54</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">CLIP (ViT-B/32)</td>
+            <td>79.62</td>
+            <td>77.89</td>
+            <td>67.53</td>
+            <td>72.11</td>
+            <td>65.99</td>
+            <td>55.1</td>
+            <td>8.2</td>
+            <td>4.34</td>
+            <td>0.48</td>
+            <td>31.24</td>
+            <td>20.71</td>
+            <td>10.53</td>
+            <td>41.15</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">CLIP (ViT-B/16)<sup><a href="#ref1">[1]</a></sup></td>
+            <td>86.53</td>
+            <td>79.1</td>
+            <td>71.68</td>
+            <td>70.75</td>
+            <td>65.31</td>
+            <td>52.38</td>
+            <td>8.84</td>
+            <td>3.22</td>
+            <td>0.8</td>
+            <td>34.3</td>
+            <td>22.58</td>
+            <td>13.58</td>
+            <td>42.42</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">SigLip (ViT-B/16)<sup><a href="#ref2">[2]</a></sup></td>
+            <td>90.5</td>
+            <td>88.95</td>
+            <td>83.25</td>
+            <td>86.05</td>
+            <td>79.25</td>
+            <td>73.13</td>
+            <td>11.58</td>
+            <td>6.43</td>
+            <td>1.77</td>
+            <td>60.95</td>
+            <td>47.03</td>
+            <td>38.37</td>
+            <td>55.61</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">SigLip (ViT-L/16)</td>
+            <td>93.44</td>
+            <td>88.43</td>
+            <td>84.46</td>
+            <td>84.35</td>
+            <td>78.23</td>
+            <td>68.37</td>
+            <td>10.29</td>
+            <td>4.82</td>
+            <td>1.29</td>
+            <td>61.8</td>
+            <td>57.05</td>
+            <td class="highlight">44.14</td>
+            <td class="highlight">56.39</td>
+          </tr>
+
+
+          <!-- Add other rows as needed and highlight the best scores in each category -->
+        </tbody>
+      </table>
+    </div>
+    <caption>Performance of foundational variants and MLLMs across categories on the VisMin Dataset. Columns 'I,' 'T,' and 'G' denote Image, Text, and Group scores from Winoground. 'AVG' denotes average across columns. Closed-source models were assessed using 400 random samples for object, attribute, and count tasks, and the full 294 samples for attributes, due to slow inference and time constraints.</caption>
+  </div>
+</section>
+<!-- End VisMin Results -->
+
+
+<!-- Performance of Fine-Tuned CLIP and Idefics2 -->
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3">Fine-Tuned CLIP and Idefics2</h2>
+    <h2 class="title is-4">Performance on VisMin Benchmark</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead class="center">
+          <tr class="oddrow">
+            <th></th>
+            <th colspan="3">Object</th>
+            <th colspan="3">Attribute</th>
+            <th colspan="3">S. Relation</th>
+            <th colspan="3">Count</th>
+            <th>AVG</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+            <th>T</th>
+            <th>I</th>
+            <th>G</th>
+          </tr>
+        </thead>
+        <tbody class="center">
+          <tr class="oddrow">
+            <td style="text-align: left;">CLIP </td>
+            <td>87.56</td>
+            <td>83.59</td>
+            <td>78.07</td>
+            <td>74.49</td>
+            <td>69.73</td>
+            <td>57.82</td>
+            <td>9.16</td>
+            <td>4.66</td>
+            <td>1.45</td>
+            <td>37.01</td>
+            <td>30.56</td>
+            <td>18.17</td>
+            <td>46.02</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">CLIP-Vismin</td>
+            <td>91.54</td>
+            <td>91.19</td>
+            <td class="highlight">86.36</td>
+            <td>85.03</td>
+            <td>83.67</td>
+            <td class="highlight">75.85</td>
+            <td>11.9</td>
+            <td>3.38</td>
+            <td>1.29</td>
+            <td>82.34</td>
+            <td>79.97</td>
+            <td class="highlight">72.33</td>
+            <td class="highlight">63.74</td>
+          </tr>
+
+          <tr>
+            <td style="text-align: left;">Idefics2</td>
+            <td>95.4</td>
+            <td>69.4</td>
+            <td>67.6</td>
+            <td>89.1</td>
+            <td>71.4</td>
+            <td>67.0</td>
+            <td>18.6</td>
+            <td>18.8</td>
+            <td>4.8</td>
+            <td>72.2</td>
+            <td>50.6</td>
+            <td>47.0</td>
+            <td>55.99</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Idefics2-VisMin</td>
+            <td>96.5</td>
+            <td>95.7</td>
+            <td class="highlight">93.3</td>
+            <td>91.2</td>
+            <td>91.8</td>
+            <td class="highlight">86.7</td>
+            <td>83.0</td>
+            <td>76.0</td>
+            <td class="highlight">69.3</td>
+            <td>85.4</td>
+            <td>87.8</td>
+            <td class="highlight">80.5</td>
+            <td class="highlight">86.43</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">
+      Performance of fine-tuned CLIP and Idefics2 across categories on the VisMin Dataset.
+  </p>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container">
+    <h2 class="title is-4">Evaluation on Fine-Grained Understanding OOD Benchmarks</h2>
+    <div class="table-container">
+      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <caption>Evaluation on single and multiple image visual fine-grained understanding benchmarks. All models adopt ViT-L-14 as vision encoder. CB refers to CountBench, SG to Sugarcrepe, and IC to Imagecode. Daggers indicate reproduced models.</caption>
+        <thead>
+          <tr>
+            <th></th>
+            <th colspan="4">Single-Image</th>
+            <th colspan="11">Multi-Image</th>
+            <th>AVG</th>
+          </tr>
+          <tr>
+            <th>Model</th>
+            <th>VSR</th>
+            <th>CB</th>
+            <th>Valse</th>
+            <th>SG</th>
+            <th>Whatsup</th>
+            <th>SPEC I2T</th>
+            <th>SPEC T2I</th>
+            <th>IC</th>
+            <th>MMVP</th>
+            <th>Winoground T</th>
+            <th>Winoground I</th>
+            <th>Winoground G</th>
+            <th>EQBEN T</th>
+            <th>EQBEN I</th>
+            <th>EQBEN G</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CLIP (ViT-L/14)</td>
+            <td>58.33</td>
+            <td>33.65</td>
+            <td>69.1</td>
+            <td>73.0</td>
+            <td>37.7</td>
+            <td>32.85</td>
+            <td>30.86</td>
+            <td>61.47</td>
+            <td>19.26</td>
+            <td>27.5</td>
+            <td>11.0</td>
+            <td>8.5</td>
+            <td>35.71</td>
+            <td>33.57</td>
+            <td>21.43</td>
+            <td>36.93</td>
+          </tr>
+          <tr>
+            <td>NegCLIP</td>
+            <td>56.56</td>
+            <td>40.0</td>
+            <td class="highlight">75.41</td>
+            <td class="highlight">85.73</td>
+            <td>41.2</td>
+            <td>37.73</td>
+            <td>35.45</td>
+            <td class="highlight">67.33</td>
+            <td>29.63</td>
+            <td>25.25</td>
+            <td>12.0</td>
+            <td>7.0</td>
+            <td>42.86</td>
+            <td>40.0</td>
+            <td>30.0</td>
+            <td>41.74</td>
+          </tr>
+          <tr>
+            <td>VisMin-CLIP</td>
+            <td class="highlight">58.69</td>
+            <td class="highlight">49.84</td>
+            <td>72.24</td>
+            <td>81.44</td>
+            <td class="highlight">43.99</td>
+            <td class="highlight">44.28</td>
+            <td class="highlight">39.98</td>
+            <td>66.81</td>
+            <td class="highlight">32.59</td>
+            <td class="highlight">32.75</td>
+            <td class="highlight">14.75</td>
+            <td class="highlight">9.75</td>
+            <td class="highlight">54.29</td>
+            <td class="highlight">40.71</td>
+            <td class="highlight">33.57</td>
+            <td class="highlight">45.05</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- End Performance of Fine-Tuned CLIP and Idefics2 --> 
+
 
 
 <!-- Image carousel -->
@@ -272,6 +655,44 @@
     </div>
   </section>
 <!--End paper poster -->
+
+
+<!-- Previous Work Section -->
+<section class="section hero is-light">
+  <div class="container">
+    <h2 class="title is-3">Our Relevant Work at CVPR2024</h2>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-4">Contrasting intra-modal and ranking cross-modal hard negatives to enhance visio-linguistic compositional understanding</h3>
+        <div class="is-size-5 publication-authors">
+          <!-- Paper authors -->
+          <span class="author-block">
+            <a href="https://zhangle.netlify.app/" target="_blank">Le Zhang</a>,</span>
+          <span class="author-block">
+            <a href="https://rabiul.me/" target="_blank">Rabiul Awal</a>,</span>
+              <span class="author-block">
+                <a href="https://www.iro.umontreal.ca/~agrawal/" target="_blank">Aishwarya Agrawal</a>
+              </span>
+              </div>
+        <p class="content has-text-justified">
+          Building on our current findings, our previous work in "Exploring Spatial Relationships in Image Data" delves into the intricacies of spatial reasoning within visual contexts. This research was pivotal in shaping the methodologies employed in our current project. For a deeper understanding of our foundational techniques and their evolution, we recommend reviewing this cornerstone research.
+        </p>
+        <a href="https://arxiv.org/abs/2306.08832" target="_blank" class="button is-info is-rounded">Read the Paper</a>
+      </div>
+    </div>
+  </div>
+  <div class="column is-one-third">
+    <figure class="image is-4by3">
+      <img src="static/images/le_intra_cross_cvpr2024.png" alt="Key figure from previous research">
+    </figure>
+  </div>
+  
+</section>
+
+
+
+<!-- End of Previous Work Section -->
+
 
 
 <!--BibTex citation -->
