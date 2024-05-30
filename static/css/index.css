@@ -225,3 +225,12 @@ table.alt tfoot {
   background-color: #e3fbf4; /* Light green background to highlight best results */
   font-weight: bold;
 }
+
+
+.family-header {
+  background-color: #d1e7f0; /* Slightly darker to indicate new family */
+  font-size: larger;
+  padding-top: 10px;
+  border-top: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+}

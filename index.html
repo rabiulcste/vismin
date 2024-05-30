@@ -75,25 +75,15 @@
                     <div class="publication-links">
                          <!-- Arxiv PDF link -->
                       <span class="link-block">
-                        <a href="https://drive.google.com/file/d/17MBgqWwxOD2ZVEs-50wRB_dmaDwUWa47/view?usp=drive_link" target="_blank"
+                        <a href="YOUR_PDF_HERE" target="_blank"
                         class="external-link button is-normal is-rounded is-dark">
                         <span class="icon">
                           <i class="fas fa-file-pdf"></i>
                         </span>
-                        <span>Paper</span>
+                        <span>Paper (incoming)</span>
                       </a>
                     </span>
 
-                    <!-- Supplementary PDF link -->
-                    <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
-                      class="external-link button is-normal is-rounded is-dark">
-                      <span class="icon">
-                        <i class="fas fa-file-pdf"></i>
-                      </span>
-                      <span>Supplementary</span>
-                    </a>
-                  </span>
 
                   <!-- Github link -->
                   <span class="link-block">
@@ -102,7 +92,7 @@
                     <span class="icon">
                       <i class="fab fa-github"></i>
                     </span>
-                    <span>Code</span>
+                    <span>Code (incoming)</span>
                   </a>
                 </span>
 
@@ -113,7 +103,7 @@
                   <span class="icon">
                     <i class="ai ai-arxiv"></i>
                   </span>
-                  <span>arXiv</span>
+                  <span>arXiv (incoming)</span>
                 </a>
               </span>
             </div>
@@ -174,6 +164,46 @@
 </section>
 <!-- End overview pipeline -->
 
+<!-- Image carousel -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+       <div class="item">
+        <!-- Your image here -->
+        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
+        <h2 class="subtitle has-text-centered">
+          First image description.
+        </h2>
+      </div>
+      <div class="item">
+        <!-- Your image here -->
+        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
+        <h2 class="subtitle has-text-centered">
+          Second image description.
+        </h2>
+      </div>
+      <div class="item">
+        <!-- Your image here -->
+        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
+        <h2 class="subtitle has-text-centered">
+         Third image description.
+       </h2>
+     </div>
+     <div class="item">
+      <!-- Your image here -->
+      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
+      <h2 class="subtitle has-text-centered">
+        Fourth image description.
+      </h2>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+<!-- End image carousel -->
+
+
 <!-- VisMin Benchmark -->
 <section class="section hero is-light">
   <div class="container">
@@ -188,11 +218,12 @@
 </section>
 
 <!-- VisMin Results -->
-<section class="section hero is-light">
+<section class="section">
   <div class="container">
     <h2 class="title is-3">Zero-shot Performance on the VisMin Benchmark</h2>
     <div class="table-wrapper">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <caption>Performance of foundational variants and MLLMs across categories on the VisMin Dataset. Columns 'I,' 'T,' and 'G' denote Image, Text, and Group scores from Winoground. 'AVG' denotes average across columns. Closed-source models were assessed using 400 random samples for object, attribute, and count tasks, and the full 294 samples for attributes, due to slow inference and time constraints.</caption>
         <thead class="center">
           <tr class="oddrow">
             <th></th>
@@ -202,7 +233,7 @@
             <th colspan="3">Count</th>
             <th rowspan="2">AVG</th>
           </tr>
-          <tr>
+          <tr style="border-bottom: 2px solid #aaa;">
             <th></th>
             <th>T</th>
             <th>I</th>
@@ -251,8 +282,13 @@
             <td>86.41</td>
             <td>86.54</td>
           </tr>
+
+          <tr class="family-header">
+            <td colspan="14">Foundational VLMs</td>
+          </tr>
+
           <tr>
-            <td style="text-align: left;">CLIP (ViT-B/32)</td>
+            <td style="text-align: left;">CLIP (ViT-B/32)<sup><a href="https://openai.com/index/clip/">[1]</a></sup></td>
             <td>79.62</td>
             <td>77.89</td>
             <td>67.53</td>
@@ -268,7 +304,7 @@
             <td>41.15</td>
           </tr>
           <tr>
-            <td style="text-align: left;">CLIP (ViT-B/16)<sup><a href="#ref1">[1]</a></sup></td>
+            <td style="text-align: left;">CLIP (ViT-B/16)</td>
             <td>86.53</td>
             <td>79.1</td>
             <td>71.68</td>
@@ -284,7 +320,7 @@
             <td>42.42</td>
           </tr>
           <tr>
-            <td style="text-align: left;">SigLip (ViT-B/16)<sup><a href="#ref2">[2]</a></sup></td>
+            <td style="text-align: left;">SigLip (ViT-B/16)<sup><a href="https://arxiv.org/abs/2303.15343">[2]</a></sup></td>
             <td>90.5</td>
             <td>88.95</td>
             <td>83.25</td>
@@ -316,24 +352,115 @@
             <td class="highlight">56.39</td>
           </tr>
 
+          <tr class="family-header">
+            <td colspan="14">MLLMs</td>
+          </tr>
+
+          <tr>
+            <td style="text-align: left;">LlaVa1.6 (7B)</td>
+            <td>93.0</td>
+            <td>32.8</td>
+            <td>32.2</td>
+            <td>92.2</td>
+            <td>34.4</td>
+            <td>33.3</td>
+            <td>91.8</td>
+            <td>7.8</td>
+            <td>7.4</td>
+            <td>73.6</td>
+            <td>25.0</td>
+            <td>20.2</td>
+            <td>38.28</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Idefics2</td>
+            <td>95.4</td>
+            <td>69.4</td>
+            <td class="highlight">67.6</td>
+            <td>89.1</td>
+            <td>71.4</td>
+            <td class="highlight">67.0</td>
+            <td>18.6</td>
+            <td>18.8</td>
+            <td>4.8</td>
+            <td>72.2</td>
+            <td>50.6</td>
+            <td class="highlight">47.0</td>
+            <td class="highlight">55.99</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">InternVL1.5</td>
+            <td>94.65</td>
+            <td>40.24</td>
+            <td>39.72</td>
+            <td>91.16</td>
+            <td>42.86</td>
+            <td>41.16</td>
+            <td>74.28</td>
+            <td>14.79</td>
+            <td class="highlight">11.74</td>
+            <td>73.51</td>
+            <td>31.58</td>
+            <td>27.5</td>
+            <td>48.60</td>
+          </tr>
+
+          <tr class="family-header">
+            <td colspan="14">Enterprise APIs</td>
+          </tr>
+
+          <tr>
+            <td style="text-align: left;">GPT4V Turbo</td>
+            <td>95.06</td>
+            <td>93.58</td>
+            <td class="highlight">91.11</td>
+            <td>90.48</td>
+            <td>88.44</td>
+            <td class="highlight">82.65</td>
+            <td>63.37</td>
+            <td>28.71</td>
+            <td class="highlight">20.79</td>
+            <td>68.46</td>
+            <td>53.41</td>
+            <td class="highlight">43.37</td>
+            <td class="highlight">68.29</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Gemini1.5 Pro</td>
+            <td>94.8</td>
+            <td>79.21</td>
+            <td>78.22</td>
+            <td>91.84</td>
+            <td>74.83</td>
+            <td>72.45</td>
+            <td>56.94</td>
+            <td>15.97</td>
+            <td>9.03</td>
+            <td>70.3</td>
+            <td>48.51</td>
+            <td>40.59</td>
+            <td>61.05</td>
+          </tr>
 
           <!-- Add other rows as needed and highlight the best scores in each category -->
         </tbody>
       </table>
     </div>
-    <caption>Performance of foundational variants and MLLMs across categories on the VisMin Dataset. Columns 'I,' 'T,' and 'G' denote Image, Text, and Group scores from Winoground. 'AVG' denotes average across columns. Closed-source models were assessed using 400 random samples for object, attribute, and count tasks, and the full 294 samples for attributes, due to slow inference and time constraints.</caption>
   </div>
 </section>
 <!-- End VisMin Results -->
 
 
 <!-- Performance of Fine-Tuned CLIP and Idefics2 -->
-<section class="section">
+<section class="section is-light">
   <div class="container">
-    <h2 class="title is-3">Fine-Tuned CLIP and Idefics2</h2>
-    <h2 class="title is-4">Performance on VisMin Benchmark</h2>
+    <h2 class="title is-3">Performance of Fine-Tuned CLIP and Idefics2 </h2>
+    <!-- <h2 class="title is-4">Performance on VisMin Benchmark</h2> -->
+
+    
     <div class="table-wrapper">
-      <table>
+      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <caption>Performance of fine-tuned CLIP and Idefics2 across categories on <strong>VisMin</strong>.</caption>  
         <thead class="center">
           <tr class="oddrow">
             <th></th>
@@ -429,20 +556,11 @@
         </tbody>
       </table>
     </div>
-    <p class="caption">
-      Performance of fine-tuned CLIP and Idefics2 across categories on the VisMin Dataset.
-  </p>
-  </div>
-</section>
 
-
-
-<section class="section">
-  <div class="container">
-    <h2 class="title is-4">Evaluation on Fine-Grained Understanding OOD Benchmarks</h2>
-    <div class="table-container">
+    <!-- <h2 class="title is-4">Evaluation on Fine-Grained Understanding OOD Benchmarks</h2> -->
+    <div class="table-wrapper">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <caption>Evaluation on single and multiple image visual fine-grained understanding benchmarks. All models adopt ViT-L-14 as vision encoder. CB refers to CountBench, SG to Sugarcrepe, and IC to Imagecode. Daggers indicate reproduced models.</caption>
+        <caption>Evaluation on Fine-Grained Understanding <strong>OOD Benchmarks</strong>. All models adopt ViT-L-14 as vision encoder. CB refers to CountBench, SG to Sugarcrepe, and IC to Imagecode. Daggers indicate reproduced models.</caption>
         <thead>
           <tr>
             <th></th>
@@ -528,59 +646,73 @@
             <td class="highlight">33.57</td>
             <td class="highlight">45.05</td>
           </tr>
+          <tr>
+            <td>Idefics2</td>
+            <td>77.3</td>
+            <td>91.11</td>
+            <td class="highlight">88.91</td>
+            <td>90.45</td>
+            <td>68.04</td>
+            <td>74.37</td>
+            <td>60.5</td>
+            <td>64.4</td>
+            <td>48.15</td>
+            <td class="highlight">47.25</td>
+            <td>33.75</td>
+            <td class="highlight">22.5</td>
+            <td>62.88</td>
+            <td>33.33</td>
+            <td>25.76</td>
+            <td>59.25</td>
+          </tr>
+          <tr>
+            <td>Idefics2-Vismin</td>
+            <td class="highlight">80.32</td>
+            <td class="highlight">93.97</td>
+            <td>86.08</td>
+            <td class="highlight">91.14</td>
+            <td class="highlight">74.42</td>
+            <td class="highlight">76.2</td>
+            <td class="highlight">76.48</td>
+            <td class="highlight">70.7</td>
+            <td class="highlight">48.89</td>
+            <td>47.0</td>
+            <td class="highlight">35.75</td>
+            <td class="highlight">22.5</td>
+            <td class="highlight">64.39</td>
+            <td class="highlight">54.55</td>
+            <td class="highlight">49.24</td>
+            <td class="highlight">64.78</td>
+          </tr>
+
+          
         </tbody>
       </table>
     </div>
   </div>
+
+  <div class="container">
+    <p><strong>Observation #1: Enhanced Model Performance through Fine-Tuning.</strong> The fine-tuning of the CLIP model using the Visual Minimal Enhanced CLIP (VisMin-CLIP) approach, which involves training on synthetic data with minimal changes, significantly enhances its performance in the Object, Attribute, and Count categories. This improvement demonstrates the effectiveness of using tailored, fine-grained synthetic data to boost the model's understanding in specific visual recognition tasks.</p>
+
+    <p><strong>Observation #2: Challenges in Spatial Relation Understanding.</strong> Despite improvements in several categories, VisMin-CLIP exhibits a slight degradation in the Spatial Relations category. This indicates inherent difficulties that the CLIP model faces in mastering spatial relationships, suggesting a potential area for further research to enhance spatial reasoning in visual language models.</p>
+
+    <p><strong>Observation #3: Comparative Benefits of Data Augmentation.</strong> The comparison between VisMin-CLIP and NegCLIP highlights the advantages of specific data augmentation strategies. While NegCLIP, which uses hard negatives and linguistic variations, shows benefits in single-image text retrieval tasks, VisMin-CLIP's focused synthetic data approach yields more substantial improvements in tasks requiring detailed understanding of counting and spatial relationships, underlining the importance of tailored augmentation methods for complex cognitive tasks.</p>
+  </section>
+
+<section class="section">
+  <div class="container">
+    <h3 class="title is-4">Additional Findings</h3>
+    <p>Further experiments reveal as shown in the right Fig.:</p>
+
+    <img src="static/images/combined_plots.jpg" alt="Scaling with VisMin data" style="float: right; margin: 0 0 10px 10px; width: 30%;"/>
+    <img src="static/images/scatter_plot_horizontal.jpg" alt="Scaling with VisMin data" style="float: right; margin: 0 0 10px 10px; width: 35%;"/>
+
+    <p><strong>Scalability:</strong> Larger CLIP models like B/32 and L/16 perform better on our synthetic data, especially on complex tasks like understanding minimal changes. For example, improvements increased from 2.37 to 6.88 in single image benchmarks when model capacity was expanded from ViT-B/32 to ViT-L/14.</p>
+    <p><strong>Enhanced Original Capabilities:</strong> Training on our data also improves performance in standard retrieval tasks, suggesting better alignment from training on minimal change tasks. This indicates our data's applicability across various cross-modal tasks.</p>
+  </div>
 </section>
-
-
-
 
 <!-- End Performance of Fine-Tuned CLIP and Idefics2 --> 
-
-
-
-<!-- Image carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          First image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item">
-      <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-<!-- End image carousel -->
-
-
 
 
 <!-- Youtube video -->
@@ -604,57 +736,15 @@
 <!-- End youtube video -->
 
 
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <video poster="" id="video1" autoplay controls muted loop height="100%">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <video poster="" id="video2" autoplay controls muted loop height="100%">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <video poster="" id="video3" autoplay controls muted loop height="100%">\
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End video carousel -->
+<div class="section">
+  <h2 class="title is-3">Conclusions and Limitations</h2>
 
-
-
-
-
-
-<!-- Paper poster -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
-
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
-      </div>
-    </div>
-  </section>
-<!--End paper poster -->
+  <p><strong>Introduced Challenging Benchmark:</strong> We introduced \bench, a benchmark for evaluating fine-grained visual understanding in VLMs such as CLIP, SigLIP, LLaVA, and Idefics2. While these models excel at object recognition, they struggle with counting and spatial relationships.</p>
+  <p><strong>Addressing Challenges via Fine-tuning:</strong> To address these challenges, we finetuned CLIP and Idefics2 on our minimal-change dataset, which led to significant improvements in object recognition, attributes, and counting. However, spatial relations remain a challenge, with models like GPT4V performing barely above random chance.</p>
+  <p><strong>Training Data for Building VLMs:</strong> Despite some noise in the training data due to limitations of current diffusion models, our dataset shows potential as a robust training resource for VLMs.</p>
+  <p><strong>Limitations:</strong> Our experiments used uniform, simple prompts for consistent evaluation, which may have variably influenced model performance.</p>
+</div>
+<!-- End of Conclusion-->
 
 
 <!-- Previous Work Section -->
@@ -689,10 +779,7 @@
   
 </section>
 
-
-
 <!-- End of Previous Work Section -->
-
 
 
 <!--BibTex citation -->
