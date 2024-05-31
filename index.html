@@ -537,7 +537,8 @@
 
     <div class="table-wrapper mb-5">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <caption>Performance of fine-tuned CLIP and Idefics2 across categories on <strong>VisMin</strong>.</caption>  
+        <caption>Performance comparison of VisMin variants of base CLIP and Idefics2. The table demonstrates how these models perform in terms of different categories, highlighting the effectiveness of our training set in improving fine-grained understanding in VLMs.</caption>
+        
         <thead class="center">
           <tr class="oddrow">
             <th></th>
@@ -582,7 +583,7 @@
             <td>46.02</td>
           </tr>
           <tr>
-            <td style="text-align: left;">CLIP-Vismin</td>
+            <td style="text-align: left;">VisMin-CLIP</td>
             <td>91.54</td>
             <td>91.19</td>
             <td class="highlight">86.36</td>
@@ -638,7 +639,7 @@
     <!-- <h2 class="title is-4">Evaluation on Fine-Grained Understanding OOD Benchmarks</h2> -->
     <div class="table-wrapper mb-5">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <caption>Evaluation on Fine-Grained Understanding <strong>OOD Benchmarks</strong>. All models adopt ViT-L-14 as vision encoder. CB refers to CountBench, SG to Sugarcrepe, and IC to Imagecode. Daggers indicate reproduced models.</caption>
+        <caption>Evaluation on Fine-Grained Understanding of <strong>Out-of-Distribution (OOD)</strong> Benchmarks. All models utilize ViT-L-14 as the vision encoder. The acronym 'CB' refers to CountBench, with 'SG' to SugarCrepe, and 'IC' to ImageCode. Our training set shows consistent improvements over the baseline model across OOD benchmarks. Additionally, we demonstrate that models employing minimally-changed images outperform NegCLIP, which utilizes nearest neighbor images.</caption>
         <thead class="center">
           <tr>
             <th></th>
@@ -869,7 +870,7 @@
               </span>
               </div>
         <p class="content has-text-justified">
-          <p>Our current findings build upon our previous work, "Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance Visio-Linguistic Compositional Understanding", whichs focuses on addressing the gaps in compositional reasoning by enhancing the alignment between images and captions. Our methodology, which refines the image-text contrastive learning framework, improves comprehension without requiring additional parameters. This research was pivotal in shaping the methodologies employed in our current project.</p>
+          <p>Our current findings build upon our previous work, "Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance Visio-Linguistic Compositional Understanding", whichs focuses on addressing the gaps in compositional reasoning by enhancing the alignment between images and captions. This research was pivotal in shaping the methodologies employed in our current project.</p>
 
           <a href="https://arxiv.org/abs/2306.08832" target="_blank" class="button is-info is-rounded">Read the Paper</a>
       </div>
