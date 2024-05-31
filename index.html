@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-  <title>Academic Project Page</title>
+  <title>VisMin</title>
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
   rel="stylesheet">
@@ -117,7 +117,7 @@
 
 <!-- Teaser video-->
 <section class="hero teaser">
-  <div class="container is-max-desktop">
+  <div class="container">
     <div class="hero-body">
       <img src="static/images/example.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
       <h2 class="subtitle has-text-centered">
@@ -149,8 +149,15 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <h2 class="title is-3">Minimal-Change Image-Text Dataset Creation</h2>
-    <div class="hero-body">
+  </div>
+
+    <div class="container">
+
       <img src="static/images/pipeline.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
+    </div>
+
+    <div class="container is-max-desktop">
+      <div class="hero-body">
       <h2 class="subtitle has-text-centered">
         Our dataset creation pipeline includes three stages:
       </h2>
@@ -205,8 +212,8 @@
 
 
 <!-- VisMin Benchmark -->
-<section class="section hero is-light">
-  <div class="container">
+<section class="hero is-small is-light">
+  <div class="container is-max-desktop">
     <h2 class="title is-3">Training and Benchmark sets</h2>
 
     <p>This study aims to enhance fine-grained understanding in VLMs by creating training and benchmark sets. The training data is auto-filtered and scalable, while the benchmark data undergoes rigorous human verification for quality. The training data is sourced from VSR and the COCO 2017 training split, while the benchmark data comes from the COCO 2017 validation split. This ensures benchmark images are unseen during training. The training dataset has 64,392 samples, and the VisMin dataset has 2,084 samples. The study aimed for a balanced benchmark across categories, but attribute samples in the benchmark are relatively low due to limitations in suggested edits. The study provides an overview of the types of changes in the benchmark and detailed information on training set subcategories.</p>
@@ -219,7 +226,7 @@
 
 <!-- VisMin Results -->
 <section class="section">
-  <div class="container">
+  <div class="container is-max-desktop">
     <h2 class="title is-3">Zero-shot Performance on the VisMin Benchmark</h2>
     <div class="table-wrapper">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
@@ -453,10 +460,10 @@
 
 <!-- Performance of Fine-Tuned CLIP and Idefics2 -->
 <section class="section is-light">
-  <div class="container">
+  <div class="container is-max-desktop">
     <h2 class="title is-3">Performance of Fine-Tuned CLIP and Idefics2 </h2>
     <!-- <h2 class="title is-4">Performance on VisMin Benchmark</h2> -->
-
+    We fine-tuned pretrained CLIP on our synthetic data, naming it Visual Minimal Enhanced CLIP (VisMin-CLIP), and compared its performance with NegCLIP, which trains the same CLIP using nearest neighbor images with associated captions as hard negatives and generates additional false captions through random word swaps. Both models use ViT-L/14 as their backbone and the original CLIP loss, initialized from OpenAI checkpoints.
     
     <div class="table-wrapper">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
@@ -691,7 +698,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container is-max-desktop">
     <p><strong>Observation #1: Enhanced Model Performance through Fine-Tuning.</strong> The fine-tuning of the CLIP model using the Visual Minimal Enhanced CLIP (VisMin-CLIP) approach, which involves training on synthetic data with minimal changes, significantly enhances its performance in the Object, Attribute, and Count categories. This improvement demonstrates the effectiveness of using tailored, fine-grained synthetic data to boost the model's understanding in specific visual recognition tasks.</p>
 
     <p><strong>Observation #2: Challenges in Spatial Relation Understanding.</strong> Despite improvements in several categories, VisMin-CLIP exhibits a slight degradation in the Spatial Relations category. This indicates inherent difficulties that the CLIP model faces in mastering spatial relationships, suggesting a potential area for further research to enhance spatial reasoning in visual language models.</p>
@@ -700,15 +707,15 @@
   </section>
 
 <section class="section">
-  <div class="container">
+  <div class="container is-max-desktop">
     <h3 class="title is-4">Additional Findings</h3>
-    <p>Further experiments reveal as shown in the right Fig.:</p>
-
-    <img src="static/images/combined_plots.jpg" alt="Scaling with VisMin data" style="float: right; margin: 0 0 10px 10px; width: 30%;"/>
-    <img src="static/images/scatter_plot_horizontal.jpg" alt="Scaling with VisMin data" style="float: right; margin: 0 0 10px 10px; width: 35%;"/>
-
-    <p><strong>Scalability:</strong> Larger CLIP models like B/32 and L/16 perform better on our synthetic data, especially on complex tasks like understanding minimal changes. For example, improvements increased from 2.37 to 6.88 in single image benchmarks when model capacity was expanded from ViT-B/32 to ViT-L/14.</p>
-    <p><strong>Enhanced Original Capabilities:</strong> Training on our data also improves performance in standard retrieval tasks, suggesting better alignment from training on minimal change tasks. This indicates our data's applicability across various cross-modal tasks.</p>
+  </div>
+  <div class="container" style="text-align: center;">
+    <img src="static/images/combined_plots.jpg" alt="Scaling with VisMin data" style="width: 42%; margin: 10px;"/>
+    <img src="static/images/scatter_plot_horizontal.jpg" alt="Scaling with VisMin data" style="width: 49%; margin: 10px;"/>
+  </div>
+  <div class="container is-max-desktop">
+  <p>Further experiments reveal as shown in the figures above. <strong>Scalability:</strong> Larger CLIP models like B/32 and L/16 perform better on our synthetic data, especially on complex tasks like understanding minimal changes. For example, improvements increased from 2.37 to 6.88 in single image benchmarks when model capacity was expanded from ViT-B/32 to ViT-L/14. <strong>Enhanced Original Capabilities:</strong> Training on our data also improves performance in standard retrieval tasks, suggesting better alignment from training on minimal change tasks. This indicates our data's applicability across various cross-modal tasks.</p>
   </div>
 </section>
 
