@@ -1,5 +1,8 @@
+@import "fonts.css";
+
+
 body {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Libre Baskerville', 'Noto Sans', sans-serif;
 }
 
 
@@ -148,7 +151,7 @@ body {
 table {
   margin: 0.5vh 0;
   width: 100%;
-  font-family: "Athletics", sans-serif;
+  font-family: 'Libre Baskerville', "Athletics", sans-serif;
 }
 table a {
   font-size: inherit;

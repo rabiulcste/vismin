@@ -117,11 +117,11 @@
 
 <!-- Teaser video-->
 <section class="hero teaser">
-  <div class="container">
+  <div class="container is-max-desktop">
     <div class="hero-body">
       <img src="static/images/example.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
       <h2 class="subtitle has-text-centered">
-        Overview of our \bench benchmark. \bench consists of four types of minimal-changes -- object, attribute, count and spatial relation -- between two image-captions pairs. The evaluation task requires a model to predict the correct image-caption match given: 1) two images and one caption, 2) two captions and one image.
+        Overview of our VisMIn benchmark. ViMin consists of four types of minimal-changes -- object, attribute, count and spatial relation -- between two image-captions pairs. The evaluation task requires a model to predict the correct image-caption match given: 1) two images and one caption, 2) two captions and one image.
       </h2>
     </div>
   </div>
@@ -145,31 +145,47 @@
 </section>
 <!-- End paper abstract -->
 
+
+
 <!-- Overview pipeline-->
 <section class="hero teaser">
   <div class="container is-max-desktop">
-    <h2 class="title is-3">Minimal-Change Image-Text Dataset Creation</h2>
-  </div>
+  <div class="hero-body">
 
-    <div class="container">
+    <h2 class="title is-3">Minimal-Change Image-Text Dataset Creation</h2>
+
+    <div class=" is-light">
 
       <img src="static/images/pipeline.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
     </div>
 
-    <div class="container is-max-desktop">
-      <div class="hero-body">
-      <h2 class="subtitle has-text-centered">
-        Our dataset creation pipeline includes three stages:
-      </h2>
-      <ol style="margin-top: 0; padding-left: 1.5em;">
-        <li><strong>Image Synthesis:</strong> We develop methods for synthesizing images involving Objects & Attributes and Counting & Spatial Relations.</li>
-        <li><strong>Automatic Filtering:</strong> An LLM generates questions and answers based on captions, and a VQA model predicts answers from images. Images are excluded if answers don't match.</li>
-        <li><strong>Human Verification:</strong> Synthetic data undergoes a rigorous 4-steps human verification, and only examples passing all stages are included in the benchmark.</li>
-      </ol>    
-    </div>
+    <h2 class="subtitle has-text-centered">
+      Our dataset creation pipeline includes three stages:
+    </h2>
+    <ol style="margin-top: 0; padding-left: 1.5em;">
+      <li><strong>Image Synthesis:</strong> We develop methods for synthesizing images involving Objects & Attributes and Counting & Spatial Relations.</li>
+      <li><strong>Automatic Filtering:</strong> An LLM generates questions and answers based on captions, and a VQA model predicts answers from images. Images are excluded if answers don't match.</li>
+      <li><strong>Human Verification:</strong> Synthetic data undergoes a rigorous 4-steps human verification, and only examples passing all stages are included in the benchmark.</li>
+    </ol>    
+
   </div>
 </section>
 <!-- End overview pipeline -->
+
+<!-- Image ramndom -->
+
+<!-- <div class="hero-body">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Random Image from VisMin</h2>
+    <p>The VisMin dataset consists of four categories of minimal changes: object, attribute, count, and spatial relation. Below is a randomly sampled image from this dataset.</p>
+  </div>
+  <div class="container">
+    <img src="static/images/VisMin-Random.svg" id="tree" alt="Your image description" style="width:100%; height:auto;">
+  </div>
+</div> -->
+<!-- End image random -->
+
+
 
 <!-- Image carousel -->
 <section class="hero is-small">
@@ -178,30 +194,30 @@
       <div id="results-carousel" class="carousel results-carousel">
        <div class="item">
         <!-- Your image here -->
-        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
+        <img src="static/images/vismin_random_object.svg" alt="MY ALT TEXT"/>
         <h2 class="subtitle has-text-centered">
-          First image description.
+          Object.
         </h2>
       </div>
       <div class="item">
         <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
+        <img src="static/images/vismin_random_attribute.svg" alt="MY ALT TEXT"/>
         <h2 class="subtitle has-text-centered">
-          Second image description.
+          Attribute.
         </h2>
       </div>
       <div class="item">
         <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
+        <img src="static/images/vismin_random_counting.svg" alt="MY ALT TEXT"/>
         <h2 class="subtitle has-text-centered">
-         Third image description.
+         Counting.
        </h2>
      </div>
      <div class="item">
       <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
+      <img src="static/images/vismin_random_srelation.svg" alt="MY ALT TEXT"/>
       <h2 class="subtitle has-text-centered">
-        Fourth image description.
+        Spatial Relationship.
       </h2>
     </div>
   </div>
@@ -228,6 +244,13 @@
 <section class="section">
   <div class="container is-max-desktop">
     <h2 class="title is-3">Zero-shot Performance on the VisMin Benchmark</h2>
+
+    <article class="message is-info">
+      <div class="message-body">
+        <strong>Setup.</strong> We evaluated a range of state-of-the-art Visual Language Models (VLMs) and Multimodal Large Language Models (MLLMs) including well-known foundational models like CLIP, SigLip, and emerging MLLMs like Idefics2 and GPT-4V. These evaluations covered image-text matching tasks, where models chose the correct image from two captions or the correct caption from two images, and adapted visual question answering formats for MLLMs, assessing alignment with captions across paired images.
+      </div>
+    </article>
+
     <div class="table-wrapper">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <caption>Performance of foundational variants and MLLMs across categories on the VisMin Dataset. Columns 'I,' 'T,' and 'G' denote Image, Text, and Group scores from Winoground. 'AVG' denotes average across columns. Closed-source models were assessed using 400 random samples for object, attribute, and count tasks, and the full 294 samples for attributes, due to slow inference and time constraints.</caption>
@@ -453,6 +476,14 @@
         </tbody>
       </table>
     </div>
+
+  <!-- Key Observations -->
+  <div class="content">
+    <p>
+      <strong>Key Observations</strong>. Our analysis revealed that <strong>text tasks generally outperform image-based tasks</strong>, indicating alignment challenges between images and captions. In <strong>object and attribute recognition</strong>, models demonstrated strong capabilities, with foundational Visual Language Models (VLMs) often outperforming Multimodal Large Language Models (MLLMs) in image-related tasks. However, both types of models faced significant challenges in <strong>spatial reasoning</strong>, highlighting a crucial area for future advancements. Notably, <strong>human participants outperformed models</strong> in complex scene comprehension, suggesting areas for model improvement.
+    </p>
+  </div>
+  <!-- End Key Observations -->
   </div>
 </section>
 <!-- End VisMin Results -->
@@ -463,8 +494,13 @@
   <div class="container is-max-desktop">
     <h2 class="title is-3">Performance of Fine-Tuned CLIP and Idefics2 </h2>
     <!-- <h2 class="title is-4">Performance on VisMin Benchmark</h2> -->
-    We fine-tuned pretrained CLIP on our synthetic data, naming it Visual Minimal Enhanced CLIP (VisMin-CLIP), and compared its performance with NegCLIP, which trains the same CLIP using nearest neighbor images with associated captions as hard negatives and generates additional false captions through random word swaps. Both models use ViT-L/14 as their backbone and the original CLIP loss, initialized from OpenAI checkpoints.
     
+    <article class="message is-info">
+      <div class="message-body">
+        <strong>Setup.</strong> We fine-tuned pretrained CLIP on our synthetic data, naming it Visual Minimal Enhanced CLIP (VisMin-CLIP), and compared its performance with NegCLIP, which trains the same CLIP using nearest neighbor images with associated captions as hard negatives and generates additional false captions through random word swaps. Both models use ViT-L/14 as their backbone and the original CLIP loss, initialized from OpenAI checkpoints.
+      </div>
+    </article>
+
     <div class="table-wrapper">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <caption>Performance of fine-tuned CLIP and Idefics2 across categories on <strong>VisMin</strong>.</caption>  
@@ -742,14 +778,15 @@
 </section>
 <!-- End youtube video -->
 
+<div class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Conclusions and Limitations</h2>
 
-<div class="container is-max-desktop">
-  <h2 class="title is-3">Conclusions and Limitations</h2>
-
-  <p><strong>Introduced Challenging Benchmark:</strong> We introduced \bench, a benchmark for evaluating fine-grained visual understanding in VLMs such as CLIP, SigLIP, LLaVA, and Idefics2. While these models excel at object recognition, they struggle with counting and spatial relationships.</p>
-  <p><strong>Addressing Challenges via Fine-tuning:</strong> To address these challenges, we finetuned CLIP and Idefics2 on our minimal-change dataset, which led to significant improvements in object recognition, attributes, and counting. However, spatial relations remain a challenge, with models like GPT4V performing barely above random chance.</p>
-  <p><strong>Training Data for Building VLMs:</strong> Despite some noise in the training data due to limitations of current diffusion models, our dataset shows potential as a robust training resource for VLMs.</p>
-  <p><strong>Limitations:</strong> Our experiments used uniform, simple prompts for consistent evaluation, which may have variably influenced model performance.</p>
+    <p><strong>Introduced Challenging Benchmark:</strong> We introduced VisMin, a benchmark for evaluating fine-grained visual understanding in VLMs such as CLIP, SigLIP, LLaVA, and Idefics2. While these models excel at object recognition, they struggle with counting and spatial relationships.</p>
+    <p><strong>Addressing Challenges via Fine-tuning:</strong> To address these challenges, we finetuned CLIP and Idefics2 on our minimal-change dataset, which led to significant improvements in object recognition, attributes, and counting. However, spatial relations remain a challenge, with models like GPT4V performing barely above random chance.</p>
+    <p><strong>Training Data for Building VLMs:</strong> Despite some noise in the training data due to limitations of current diffusion models, our dataset shows potential as a robust training resource for VLMs.</p>
+    <p><strong>Limitations:</strong> Our experiments used uniform, simple prompts for consistent evaluation, which may have variably influenced model performance.</p>
+  </div>
 </div>
 <!-- End of Conclusion-->
 
@@ -772,9 +809,9 @@
               </span>
               </div>
         <p class="content has-text-justified">
-          Building on our current findings, our previous work in "Exploring Spatial Relationships in Image Data" delves into the intricacies of spatial reasoning within visual contexts. This research was pivotal in shaping the methodologies employed in our current project. For a deeper understanding of our foundational techniques and their evolution, we recommend reviewing this cornerstone research.
-        </p>
-        <a href="https://arxiv.org/abs/2306.08832" target="_blank" class="button is-info is-rounded">Read the Paper</a>
+          <p>Our current findings build upon our previous work, "Contrasting Intra-Modal and Ranking Cross-Modal Hard Negatives to Enhance Visio-Linguistic Compositional Understanding", whichs focuses on addressing the gaps in compositional reasoning by enhancing the alignment between images and captions. Our methodology, which refines the image-text contrastive learning framework, improves comprehension without requiring additional parameters. This research was pivotal in shaping the methodologies employed in our current project.</p>
+
+          <a href="https://arxiv.org/abs/2306.08832" target="_blank" class="button is-info is-rounded">Read the Paper</a>
       </div>
     </div>
   </div>
