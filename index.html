@@ -149,6 +149,27 @@
 </section>
 <!-- End teaser video -->
 
+
+
+<!-- Highlights -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">✨ Highlights ✨</h2>
+    <p><strong>🔍 VisMin:</strong> New benchmark for fine-grained visual understanding.</p>
+    <p><strong>🔄 Pipeline:</strong> Automatic generation of visual minimal-change pairs.</p>
+    <p><strong>📊 Findings:</strong> VLMs are good at object/attribute understanding, but struggle with counting/spatial relations.</p>
+    <p><strong>🔧 Fine-tuned CLIP and Idefics2 on our data:</strong></p>
+    <ul>
+      <li>📈 Significant improvements on objects, attributes, and counting.</li>
+      <li>📉 Limited CLIP gains, significant Idefics2 gains in spatial relations.</li>
+      <li>🖼️ Improved CLIP image-text alignment on COCO retrieval.</li>
+    </ul>
+    <p>📚 Our dataset is a robust training resource for VLMs.</p>
+  </div>
+</section>
+<!-- End of Highlights -->
+
+
 <!-- Paper abstract -->
 <section class="section hero is-light">
   <div class="container is-max-desktop">
@@ -274,7 +295,7 @@
 
     <div class="table-wrapper mb-5">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <caption>Performance of foundational variants and MLLMs across categories on the VisMin Dataset. Columns 'I,' 'T,' and 'G' denote Image, Text, and Group scores from Winoground. 'AVG' denotes average across columns. Closed-source models were assessed using 400 random samples for object, attribute, and count tasks, and the full 294 samples for attributes, due to slow inference and time constraints.</caption>
+        <caption>Performance of foundational variants and MLLMs across categories on the VisMin Dataset. Columns 'I,' 'T,' and 'G' denote Image, Text, and Group scores from Winoground. 'AVG' denotes average across columns.</caption>
         <thead class="center">
           <tr class="oddrow">
             <th></th>
@@ -536,7 +557,8 @@
   <!-- Key Observations -->
   <div class="content">
     <p>
-      Our analysis revealed that <strong>text tasks generally outperform image-based tasks</strong>, indicating alignment challenges between images and captions. In <strong>object and attribute recognition</strong>, models demonstrated strong capabilities, with foundational Visual Language Models (VLMs) often outperforming Multimodal Large Language Models (MLLMs) in image-related tasks. However, both types of models faced significant challenges in <strong>spatial reasoning</strong>, highlighting a crucial area for future advancements. Notably, <strong>human participants outperformed models</strong> in complex scene comprehension, suggesting areas for model improvement.
+      <strong>How do state-of-the-art VLMs perform on VisMin?</strong> Both CLIP-family and Multimodal LMs (MLLMs) excel in object and attribute understanding but <strong>struggle with spatial relationships and counting</strong>. Larger CLIP models don't improve spatial understanding.
+      Open-source MLLMs struggle more with <strong>image-score</strong> (distinguishing similar images given a caption) than text-score (distinguishing similar captions given an image). GPT4-o is slightly better in spatial tasks than others, including Gemini 1.0 Pro, but still limited.
     </p>
   </div>
   <!-- End Key Observations -->
@@ -551,15 +573,17 @@
     <h2 class="title is-3">Performance of Fine-Tuned CLIP and Idefics2 </h2>
     <!-- <h2 class="title is-4">Performance on VisMin Benchmark</h2> -->
     
+    <p><strong>Can we enhance the visual fine-grained understanding by fine-tuning these models on our minimal change data?</strong> Yes! We fine-tune CLIP-family models and Idefics 2 (an MLLM) on our minimal change data and conduct comprehensive evaluation across both IID and OOD benchmarks.</p>
+    
     <article class="message is-info">
       <div class="message-body">
-        <strong>Setup.</strong> We fine-tuned pretrained CLIP on our synthetic data, naming it Visual Minimal Enhanced CLIP (VisMin-CLIP), and compared its performance with NegCLIP, which trains the same CLIP using nearest neighbor images with associated captions as hard negatives and generates additional false captions through random word swaps. Both models use ViT-L/14 as their backbone and the original CLIP loss, initialized from OpenAI checkpoints.
+        <strong>Setup.</strong> We compare finetuning CLIP on our visual minimal change data with recent approaches that also finetune CLIP on some kind of visual hard negatives -- <a href="https://arxiv.org/pdf/2210.01936" target="_blank">NegCLIP</a> which uses nearest neighbor images, <a href="https://twitter.com/MuCai7" target="_blank">CounterCurate</a> which uses limited minimal change data, and <a href="https://arxiv.org/abs/2312.00081" target="_blank">SPEC</a> which uses simplistic minimal change data.
       </div>
     </article>
 
     <div class="table-wrapper mb-5">
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <caption>Performance comparison of VisMin variants of base CLIP and Idefics2. The table demonstrates how these models perform in terms of different categories, highlighting the effectiveness of our training set in improving fine-grained understanding in VLMs.</caption>
+        <caption>Performance comparison of VisMin variants of base CLIP and Idefics2.</caption>
         
         <thead class="center">
           <tr class="oddrow">
@@ -667,7 +691,6 @@
             <th></th>
             <th colspan="4">Single-Image</th>
             <th colspan="11">Multi-Image</th>
-            <th>AVG</th>
           </tr>
           <tr>
             <th></th>
@@ -681,7 +704,6 @@
             <th>MMVP</th>
             <th colspan="3">Winoground</th>
             <th colspan="3">EQBEN</th>
-            <th></th>
           </tr>
           <tr>
             <th></th>
@@ -700,7 +722,6 @@
             <th>T</th>
             <th>I</th>
             <th>G</th>
-            <th></th>
           </tr>
         </thead>
         <tbody class="center">
@@ -721,7 +742,6 @@
             <td>35.71</td>
             <td>33.57</td>
             <td>21.43</td>
-            <td>42.01</td>
           </tr>
           <tr>
             <td style="text-align: left;">NegCLIP</td>
@@ -740,7 +760,43 @@
             <td>42.86</td>
             <td>40.0</td>
             <td>30.0</td>
-            <td>47.4</td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">CounterCurate-CLIP</td>
+            <td>56.74</td>
+            <td>30.79</td>
+            <td>68.47</td>
+            <td>83.66</td>
+            <td class="highlight">44.29</td>
+            <td>37.99</td>
+            <td>35.24</td>
+            <td>65.81</td>
+            <td>25.19</td>
+            <td>28.0</td>
+            <td>13.25</td>
+            <td>9.0</td>
+            <td>45.0</td>
+            <td>33.57</td>
+            <td>28.57</td>
+          </tr>
+
+          <tr>
+            <td style="text-align: left;">SPEC-CLIP</td>
+            <td class="highlight">64.54</td>
+            <td>32.06</td>
+            <td>68.75</td>
+            <td>79.34</td>
+            <td>43.35</td>
+            <td class="highlight">87.04</td>
+            <td class="highlight">88.08</td>
+            <td>66.25</td>
+            <td>30.37</td>
+            <td>22.5</td>
+            <td>7.75</td>
+            <td>4.75</td>
+            <td>41.43</td>
+            <td>40.0</td>
+            <td>30.71</td>
           </tr>
           <tr>
             <td style="text-align: left;">VisMin-CLIP</td>
@@ -759,7 +815,9 @@
             <td class="highlight">54.29</td>
             <td class="highlight">40.71</td>
             <td class="highlight">33.57</td>
-            <td class="highlight">50.16</td>
+          </tr>
+          <tr class="family-header">
+            <td colspan="14"></td>
           </tr>
           <tr>
             <td style="text-align: left;">Idefics2</td>
@@ -778,7 +836,6 @@
             <td>62.88</td>
             <td>33.33</td>
             <td>25.76</td>
-            <td>67.13</td>
           </tr>
           <tr>
             <td style="text-align: left;">Idefics2-Vismin</td>
@@ -797,21 +854,16 @@
             <td class="highlight">64.39</td>
             <td class="highlight">54.55</td>
             <td class="highlight">49.24</td>
-            <td class="highlight">71.77</td>
           </tr>
-
-          
         </tbody>
-      </table>
+      </table>      
     </div>
   </div>
 
   <div class="container is-max-desktop">
-    <p><strong>Observation #1: Enhanced Model Performance through Fine-Tuning.</strong> The fine-tuning of the CLIP model using the Visual Minimal Enhanced CLIP (VisMin-CLIP) approach, which involves training on synthetic data with minimal changes, significantly enhances its performance in the Object, Attribute, and Count categories. This improvement demonstrates the effectiveness of using tailored, fine-grained synthetic data to boost the model's understanding in specific visual recognition tasks.</p>
-
-    <p><strong>Observation #2: Challenges in Spatial Relation Understanding.</strong> Despite improvements in several categories, VisMin-CLIP exhibits a slight degradation in the Spatial Relations category. This indicates inherent difficulties that the CLIP model faces in mastering spatial relationships, suggesting a potential area for further research to enhance spatial reasoning in visual language models.</p>
-
-    <p><strong>Observation #3: Comparative Benefits of Data Augmentation.</strong> The comparison between VisMin-CLIP and NegCLIP highlights the advantages of specific data augmentation strategies. While NegCLIP, which uses hard negatives and linguistic variations, shows benefits in single-image text retrieval tasks, VisMin-CLIP's focused synthetic data approach yields more substantial improvements in tasks requiring detailed understanding of counting and spatial relationships, underlining the importance of tailored augmentation methods for complex cognitive tasks.</p>
+    <p><strong>Observation #1: Enhanced Model Performance through Fine-Tuning.</strong> Fine-tuning significantly improved both CLIP-family models and MLLMs on objects, attributes, and counting.  Our VisMin-CLIP outperformed in 11 of 18 tasks, while the others excelled in 3, 1, and 3 tasks respectively.</p>    
+    <p><strong>Observation #2: Challenges in Spatial Relation Understanding.</strong> Despite improvements in several categories, in spatial relations, CLIP showed limited improvement, whereas Idefics2 (an MLLM) displayed significant gains. </p>      
+    <p><strong>Observation #3: Comparative Benefits.</strong> VisMin-CLIP achieves the best performance with the least number of samples (65K) during fine-tuning, compared to SPEC-CLIP's 637K.</p>
   </div>
 
   <div class="container is-max-desktop mt-6 mb-5">
@@ -834,7 +886,7 @@
   </div>
   
   <div class="container is-max-desktop">
-  <p>Further experiments reveal as shown in the figures above. <strong>Scalability:</strong> Larger CLIP models like B/32 and L/16 perform better on our synthetic data, especially on complex tasks like understanding minimal changes. For example, improvements increased from 2.37 to 6.88 in single image benchmarks when model capacity was expanded from ViT-B/32 to ViT-L/14. <strong>Enhanced Original Capabilities:</strong> Training on our data also improves performance in standard retrieval tasks, suggesting better alignment from training on minimal change tasks. This indicates our data's applicability across various cross-modal tasks.</p>
+  <p>⬆️Scalability: Larger models gain more from our training set. ⬆️ <strong>How does fine-tuning impact the general image-text alignment of CLIP?</strong> Improves CLIP's image-text retrieval. ⬇️ Slight drop for Idefics2 in standard VL tasks due to overfitting, fixable with dataset mixing.📈</p>
   </div>
 </section>
 
@@ -845,17 +897,6 @@
 
 <!-- End youtube video -->
 
-<section class="section">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3">Conclusions and Limitations</h2>
-
-    <p><strong>Introduced Challenging Benchmark:</strong> We introduced VisMin, a benchmark for evaluating fine-grained visual understanding in VLMs such as CLIP, SigLIP, LLaVA, and Idefics2. While these models excel at object recognition, they struggle with counting and spatial relationships.</p>
-    <p><strong>Addressing Challenges via Fine-tuning:</strong> To address these challenges, we finetuned CLIP and Idefics2 on our minimal-change dataset, which led to significant improvements in object recognition, attributes, and counting. However, spatial relations remain a challenge, with models like GPT4V performing barely above random chance.</p>
-    <p><strong>Training Data for Building VLMs:</strong> Despite some noise in the training data due to limitations of current diffusion models, our dataset shows potential as a robust training resource for VLMs.</p>
-    <p><strong>Limitations:</strong> Our experiments used uniform, simple prompts for consistent evaluation, which may have variably influenced model performance.</p>
-  </div>
-</section>
-<!-- End of Conclusion-->
 
 <!-- Previous Work Section -->
 <section class="section hero is-featured">
@@ -935,7 +976,6 @@
   </div>
 </section>
 <!-- End BibTeX citation -->
-
 
 
 

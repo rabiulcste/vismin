@@ -273,3 +273,31 @@ pre code {
   padding: 0; /* Remove padding */
   overflow-x: auto;
 }
+
+
+/* Style for unordered list */
+ul {
+  list-style-type: none; /* Remove default bullet style */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+li {
+  margin-bottom: 8px; /* Add space between list items */
+  position: relative; /* Position relative for custom bullet */
+  padding-left: 20px; /* Add padding for custom bullet */
+}
+
+li::before {
+  position: absolute; /* Position bullet absolutely */
+  left: 0; /* Align bullet to the left */
+}
+
+/* Style for nested unordered lists */
+ul ul {
+  margin-left: 20px; /* Indent nested lists */
+}
+
+ul ul li::before {
+  content: '◦'; /* Custom bullet for nested list */
+}
