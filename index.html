@@ -47,6 +47,45 @@
 <body>
 
 
+<!-- Navbar -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" id="navbarBurger">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu" id="navbarMenu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://rabiul.me">
+        <span class="icon">
+          <i class="fas fa-home"></i>
+        </span>
+      </a>
+  
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://github.com/lezhang7/Enhance-FineGrained">
+            CE-CLIP
+          </a>
+          <a class="navbar-item" href="https://culturalvqa.org/">
+            CulturalVQA
+          </a>
+          <a class="navbar-item" href="https://rabiul.me/vqazero/">
+            Prompting4VQA
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- End Navbar -->
+
+
   <section class="hero">
     <div class="hero-body">
       <div class="container is-max-desktop">
@@ -195,20 +234,17 @@
   <div class="hero-body">
 
     <h2 class="title is-3">Minimal-Change Image-Text Dataset Creation</h2>
-
+    <p>Generating captions automatically is feasible, but creating hard-negative examples for complex COCO-like images is challenging! Here's our minimal-change pairs synthesis framework:  fully automated - using LLM and Diffusion and designed to be controllable and scalable!</p>
     <div class=" is-light">
 
       <img src="static/images/pipeline.png" id="tree" alt="Your image description" style="width:100%; height:auto;">
     </div>
-
-    <h2 class="subtitle has-text-centered">
-      Our dataset creation pipeline includes three stages:
-    </h2>
-    <ol style="margin-top: 0; padding-left: 1.5em;">
-      <li><strong>Image Synthesis:</strong> We develop methods for synthesizing images involving Objects & Attributes and Counting & Spatial Relations.</li>
-      <li><strong>Automatic Filtering:</strong> An LLM generates questions and answers based on captions, and a VQA model predicts answers from images. Images are excluded if answers don't match.</li>
-      <li><strong>Human Verification:</strong> Synthetic data undergoes a rigorous 4-steps human verification, and only examples passing all stages are included in the benchmark.</li>
-    </ol>    
+    <p>Our dataset creation pipeline includes three stages:</p>
+    <ol style="padding-left: 1.5em;">
+      <li><strong>Minimal-Change Pair Synthesis:</strong> Synergistic use of LLM and Diffusion models to synthesize minimal-change pairs based on the category.</li>
+      <li><strong>Automatic Filtering:</strong> Use region and global VQA filtering for automatic minimal-change edit verification.</li>
+      <li><strong>Human Verification:</strong> A rigorous 4-step human verification process for benchmark creation.</li>
+    </ol> 
 
   </div>
 </section>
@@ -275,9 +311,9 @@
     <h2 class="title is-3">Training and Benchmark sets</h2>
 
     <p>This study aims to enhance fine-grained understanding in VLMs by creating training and benchmark sets. The training data is auto-filtered and scalable, while the benchmark data undergoes rigorous human verification for quality. The training data is sourced from VSR and the COCO 2017 training split, while the benchmark data comes from the COCO 2017 validation split. This ensures benchmark images are unseen during training. The training dataset has 64,392 samples, and the VisMin dataset has 2,084 samples. The study aimed for a balanced benchmark across categories, but attribute samples in the benchmark are relatively low due to limitations in suggested edits. The study provides an overview of the types of changes in the benchmark and detailed information on training set subcategories.</p>
-    <div class="container"  style="display: flex; justify-content: center;">
-      <img src="static/images/training_distribution.png" alt="VisMin Benchmark" style="width:50%; height:auto; margin-right: 2.5%;">
-      <img src="static/images/VisMin_distribution.png" alt="VisMin Benchmark" style="width:50%; height:auto; margin-left: 2.5%;">
+    <div class="container" style="display: flex; justify-content: center;">
+      <img src="static/images/training_distribution.png" alt="VisMin Benchmark" style="width:40%; max-width: 300px; height:auto; margin-right: 2.5%;">
+      <img src="static/images/visMin_distribution.png" alt="VisMin Benchmark" style="width:40%; max-width: 300px; height:auto; margin-left: 2.5%;">
     </div>
   </div>
 </section>
@@ -910,10 +946,10 @@
      
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <figure class="image" style="margin: 0;">
-            <img src="static/images/cvpr-navbar-logo.svg" alt="CVPR2024 Logo" style="height: 3em; object-fit: contain;">
+            <img src="static/images/cvpr-navbar-logo.svg" alt="CVPR2024 Logo" style="height: 2.5em; width: auto; object-fit: contain;">
           </figure>
           <figure class="image" style="margin: 0;">
-            <img src="static/images/milalogowebblancrgb.png" alt="Mila Logo" style="height: 3em; object-fit: contain;">
+            <img src="static/images/milalogowebblancrgb.png" alt="Mila Logo" style="height: 1.5em; width: auto; object-fit: contain;">
           </figure>
         </div>
         <figure class="image">
@@ -931,18 +967,6 @@
             Contrasting Intra-modal and Ranking Cross-modal Hard Negatives to Enhance Visio-linguistic Compositional Understanding
           </a>
         </h3>
-        <div class="is-size-5 publication-authors">
-          <!-- Paper authors -->
-          <span class="author-block">
-            <a href="https://zhangle.netlify.app/" target="_blank">Le Zhang</a>,
-          </span>
-          <span class="author-block">
-            <a href="https://rabiul.me/" target="_blank">Rabiul Awal</a>,
-          </span>
-          <span class="author-block">
-            <a href="https://www.iro.umontreal.ca/~agrawal/" target="_blank">Aishwarya Agrawal</a>
-          </span>
-        </div>
         <p class="content has-text-justified">
           Our current findings build upon our previous work, focusing on addressing the gaps in compositional reasoning by enhancing the alignment between images and captions. This research was pivotal in shaping the methodologies employed in our current project.
         </p>
@@ -1002,6 +1026,19 @@
 <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
 
     <!-- End of Statcounter Code -->
+
+  <!-- Add this script at the end of your body tag -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navbarBurger = document.getElementById('navbarBurger');
+      const navbarMenu = document.getElementById('navbarMenu');
+
+      navbarBurger.addEventListener('click', () => {
+        navbarBurger.classList.toggle('is-active');
+        navbarMenu.classList.toggle('is-active');
+      });
+    });
+  </script>
 
   </body>
   </html>
