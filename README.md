@@ -131,8 +131,8 @@ python -m ctrl_edit.filters.tifa_filter --dataset <dataset_name>
 
 ## Setup
 ```bash
-git clone <https://github.com/rabiulcste/synth-diffuse>
-cd synth-diffuse
+git clone <https://github.com/rabiulcste/vismin>
+cd vismin
 pip install -r requirements.txt
 ```
 
