@@ -1,0 +1,996 @@
+{
+    "prompt_name": "edit_filter",
+    "meta_description": "This prompt template is designed to refine and enhance source phrase by incorporating provided edited phrases and tags.",
+    "io_structure": {
+        "input_keys": [
+            "OriginalText",
+            "EditedText"
+        ],
+        "output_keys": [
+            "Reject",
+            "FilterReason",
+            "SuggestedCategory"
+        ]
+    },
+    "task_instruction_object": "Given an image caption and an edited version of the caption, determine whether the proposed edit should be accepted or rejected based on the following criteria:\nThe \"OriginalText\" and \"EditedText\" represent the change from an object in the original image with a different one in the edited version.\nThe edit must target only object changes within a specific scene region. Any changes related to attributes, spatial relations, counting, or any alterations unrelated to objects are strictly forbidden.\nThe new object should be visually distinct and mutually exclusive from the original, ensuring the replacement object look different than the original. Ensure the objects being swapped are not synonymous or closely related sub-categories, to prevent identical edits.\nThe edit should be limited to one region, not requiring adjustments elsewhere in the image for scene consistency.\nAdhere to a one-to-one replacement rule; introduce no additional objects beyond the one being replaced.\nReject the edit if it introduces unnecessary specificity by making implicit assumptions about the object in the original unless it's explicitly clear from the original caption.\nReject the edit if the information provided is insufficient or uncertain. The filtering process is strict; when in doubt, it's better to reject the edit.\nAn acceptable edit must adhere to all the criteria.\nFirst, provide a concise explanation of your understanding of the proposed edit. Then, provide a concise rationale for your decision (\"Reject: NO/YES\") to either accept or reject the edit.",
+    "task_instruction_attribute": "Given an image caption and an edited version of the caption, determine whether the proposed edit should be accepted or rejected based on the following criteria:\nThe \"OriginalText\" and \"EditedText\" represent a change from one attribute of an object in the original image to a different attribute in the edited image.\nThe edit should only modify attributes of an object depicted in the image. Reject any changes that involve the objects themselves or their spatial relations.\nReject edits involving counting or size.\nThe only acceptable modifications to an object in a given image caption include changing distinct visual attributes such as color, pattern, shape, texture, material, state, condition and other relevant attributes, excluding counting and size.\nThe attribute changes should be distinct and mutually exclusive, not synonymous.\nReject edits that suggest replacing attributes or adjectives with their synonyms.\nReject the edit if it involves adding new attributes instead of modifying existing ones.\nReject the edit if the information provided is insufficient or uncertain. The filtering process is strict; when in doubt, it's better to reject the edit.\nAn acceptable edit must adhere to all the criteria.\nFirst, provide a concise explanation of your understanding of the proposed edit, then proceed with your decision (\"Reject: YES/NO\") to reject the edit or not.",
+    "task_instruction": "Your task is to evaluate the proposed edit of a region in a given image caption. The edit can occur in the object, attribute, or action. Respond with 'YES' if the edit corresponds only to a region and changes one of the categories, or 'NO' if it doesn't. Please provide a brief reason for your decision. Follow these guidelines: For object changes, avoid synonyms or changes to an object that is not distinct enough. For attribute changes, ensure that only the attribute (e.g., color, pattern, condition) differs, while the object remains the same. For action changes, the action should be distinct and visibly different in the edited image. Reject the edit if the information is insufficient or you are uncertain. The filtering process is strict, so when in doubt, it's better to reject the edit. Refer to the examples provided for further clarification.",
+    "samples": [
+        {
+            "OriginalText": "A person is standing outside a sliding glass door on a cell phone.",
+            "EditedText": "A man is standing outside a sliding glass door on a cell phone.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The edit modifies a gender-neutral term ('person') to a gender-specific term ('man'), which introduces unnecessary specificity and does not represent a clear attribute change as required. Moreover, 'person' and 'man' could overlap, making this change more about specificity than a distinct attribute change.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A dog sitting on a table",
+            "EditedText": "A cat sitting on a table",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it changes the object depicted in the scene, substituting 'dog' with 'cat.' This violates the criteria of only altering attributes of the objects depicted in the scene, not the objects themselves.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A truck is parked on the side of the road.",
+            "EditedText": "A car is parked on the side of the road.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "Changing an object with a different object is not allowed in the attribute category.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A child is eating an apple.",
+            "EditedText": "A child is eating a banana.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it changes the object being interacted with in the scene, substituting 'apple' with 'banana.' This violates the criteria of only altering attributes of the objects depicted in the scene, not the objects themselves.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A bird is flying in the sky.",
+            "EditedText": "A plane is flying in the sky.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "Changing an object with a different object is not allowed in the attribute category.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A person on skis performing a flip off a snowy track.",
+            "EditedText": "A person on skis performing a flip off a snowy hill.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the term 'track' to 'hill,' implying a different terrain where the action is taking place. However, the original text does not specify the terrain, so making this change introduces unnecessary specificity and uncertainty. Therefore, the edit is rejected.",
+            "SuggestedCategory": "attribute(terrain)"
+        },
+        {
+            "OriginalText": "a kid playing his iPod eating a piece of pizza.",
+            "EditedText": "a kid is playing her iPod and eating a piece of pizza.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The edit from 'his' to 'her' introduces a gender-specific change, which is not a direct modification of an object's attribute but rather a change in possessive pronoun, violating the criteria.",
+            "SuggestedCategory": "attribute(pronoun)"
+        },
+        {
+            "OriginalText": "a couple of animals walking on a rock road",
+            "EditedText": "A couple of animals are walking on a wooden bridge.",
+            "Category": "attribute(structure)",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it involves changing the type of surface from 'rock road' to 'wooden bridge', which introduces a new attribute rather than modifying an existing one. Additionally, this change alters the spatial relation of the scene, which is outside the scope of the allowed modifications. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(structure)"
+        },
+        {
+            "OriginalText": "A group of people riding surfboards on a fast moving river.",
+            "EditedText": "A person riding surfboards on a fast moving river.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "Changing 'a group of people' to 'a person' modifies the count from multiple individuals to a single one, which directly violates the guidelines against counting-related changes. This edit does not adjust an object's attribute but rather its quantity, making it an unacceptable attribute change.",
+            "SuggestedCategory": "attribite(count)"
+        },
+        {
+            "OriginalText": "Skateboarder doing a trick at an outdoor skate park.",
+            "EditedText": "A skateboarder is doing a trick at an indoor skate park.",
+            "Category": "attribute(environment)",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the location of the skate park from outdoors to indoors. This involves modifying the spatial attributes of the scene, which is outside the scope of the allowed modifications. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(spatial)"
+        },
+        {
+            "OriginalText": "Flowers in a vase on a table in a sunlit dining room. ",
+            "EditedText": "Flowers in a jar on a table in a sunlit dining room.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes 'vase' to 'jar', a distinct object, without adding new objects or altering spatial relations. It meets all criteria, so it is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A group of flowers is put in a mason jar.",
+            "EditedText": "A bouquet of flowers is put in a mason jar.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit from 'a group of flowers' to 'a bouquet of flowers' is rejected because they are synonymous. Both terms essentially refer to a collection of flowers, with 'bouquet' implying a specific arrangement without changing the object's nature.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A little kid sitting on top of a surfboard on a beach.",
+            "EditedText": "A little kid sitting on top of a paddleboard on a beach.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'surfboard' to 'paddleboard' does not meet the criteria for a mutually exclusive change, as both items are visually similar. This edit fails to introduce a significant, discernible difference between the two types of water sports equipment, thus not constituting an acceptable object change.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Various traffic signs displayed with a rural background.",
+            "EditedText": "Various warning signs displayed with a rural background.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "'Warning signs' are a subset of 'traffic signs', making this change a specification within the same category rather than a distinct, mutually exclusive alteration. This fails to meet the criteria for acceptable object changes that require clear visual distinction.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "The stuffed animals are displayed in a glass case.",
+            "EditedText": "The teddy bears are displayed in a glass case.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit replaces 'stuffed animals' with 'teddy bears,' which is a more specific sub-category within the same broader category. This change does not introduce a visually distinct and mutually exclusive object but narrows down to a sub-category. According to the guidelines, such edits do not meet the criteria for acceptable object changes.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "The young player is batting during a little league game.",
+            "EditedText": "The young player is batting during a softball game.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit modifies the type of game from little league to softball. This change introduces unnecessary specificity about the type of game, which is outside the scope of the allowed modifications. Thus, it's safer to reject the edit.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Flowers in a vase on a table in a sunlit dining room. ",
+            "EditedText": "Flowers in a vase on a desk in a sunlit dining room.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit suggests changing 'table' to 'desk' which could be considered synonyms. This violates the criteria of changing objects with their synonyms or closely related terms. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Skateboarder doing a trick at an outdoor skate park.",
+            "EditedText": "A BMX rider is doing a trick at an outdoor skate park.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit introduces a different object, changing 'skateboarder' to 'BMX rider'. While both objects may be plausible in an outdoor skate park setting, the visual context of a skateboarder performing a trick is distinct from that of a BMX rider. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Those are big goofy looking goggles but they are for safety.",
+            "EditedText": "Those are big goofy looking glasses but they are for safety.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, 'glasses,' is synonymous with 'goggles', so the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A parking machine is shown with a solar panel.",
+            "EditedText": "A parking machine with a solar roof is shown",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The attribute 'solar panel' in the original text already implies the presence of solar power, which could be on the roof of the parking machine. Therefore, the attribute change is not distinct or mutually exclusive. Hence, the edit is rejected.",
+            "SuggestedCategory": "attribute(synonym)"
+        },
+        {
+            "OriginalText": "a couple of buses are driving down a busy street.",
+            "EditedText": "a fleet of buses are driving down a busy street.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The transition from 'a couple of buses' to 'a fleet of buses' shifts the quantity implied, from few to many, directly conflicting with the prohibition against modifications that involve counting. This edit pertains to quantity rather than an attribute change of the objects described, hence failing the criteria for acceptable edits in the attribute category.",
+            "SuggestedCategory": "attribite(count)"
+        },
+        {
+            "OriginalText": "An outdoor market with a lot of people shopping for fruit and vegetables",
+            "EditedText": "An bustling bazaar with a lot of people shopping for fruit and vegetables",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'market' to 'bazaar' introduces terms that are largely synonymous, lacking mutual exclusivity and therefore not meeting the object change criteria. Moreover, the addition of 'bustling' suggests an attribute change rather than a direct object substitution, conflicting with the requirement for edits to solely alter objects depicted in the scene without introducing synonymous or attribute modifications.",
+            "SuggestedCategory": "attribute(others)"
+        },
+        {
+            "OriginalText": "A very nice looking rest room with a big mirror.",
+            "EditedText": "A very nice looking bathroom with a big mirror.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The terms 'rest room' and 'bathroom' are synonyms, referring to the same object without introducing a distinctly different object as required for a valid object change. This edit fails to meet the criteria as it does not replace an existing object with another visually and contextually distinct one, but rather uses different terms for the same entity.",
+            "SuggestedCategory": "object(synonym)"
+        },
+        {
+            "OriginalText": "several people in the ocean sitting on surf boards.",
+            "EditedText": "a person in the ocean sitting on surf boards.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "Changing 'several people' to 'a person' affects the count, shifting from plural to singular. This modification focuses on the quantity rather than altering an object itself, which contravenes the guidelines against counting changes.",
+            "SuggestedCategory": "counting"
+        },
+        {
+            "OriginalText": "a man in an old fashioned baseball uniform hitting a baseball ",
+            "EditedText": "A man in an old fashioned baseball uniform is hitting a softball",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the object from a 'baseball' to a 'softball,' which are closely related sub-categories. This violates the guideline against changing objects with their synonyms or closely related sub-categories. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A male is leaning to the side holding a Wii remote with the 'Nunchuk' accessory attached.",
+            "EditedText": "A male is leaning to the side holding a PlayStation controller with the 'Nunchuk' accessory attached.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it changes the object depicted in the scene, substituting 'Wii remote' with 'PlayStation controller.' While this alteration doesn't violate the guideline against changing objects with synonyms or closely related sub-categories, it introduces unnecessary specificity by associating the 'Nunchuk' accessory, which is specific to the 'Wii remote,' with the 'PlayStation controller.' Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A group of children playing on the snowy ground.",
+            "EditedText": "A group of children playing on the icy ground.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the surface attribute from 'snow' to 'ice', which are synonymous terms referring to the same visual attribute. This alteration does not introduce a distinct attribute and violates the criteria regarding synonyms. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(surface)"
+        },
+        {
+            "OriginalText": "A group of people in line at a food truck.",
+            "EditedText": "A group of adults in line at a food truck.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "Switching 'people' to 'adults' introduces a specificity that does not fundamentally alter the depicted objects, but rather specifies the type of people, which remains within the original category's scope.",
+            "SuggestedCategory": "objects(specificity)"
+        },
+        {
+            "OriginalText": "A man with his hand out next to a giraffe with its tongue out.",
+            "EditedText": "A man with his hand up next to a giraffe with its tongue out.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "Modifying 'hand out' to 'hand up' changes the spatial positioning (which is not allowed) rather than an attribute of the object itself. This edit pertains to the arrangement of the man's hand in space, not to a change in the objects or their intrinsic attributes.",
+            "SuggestedCategory": "attribute(spatial-relation)"
+        },
+        {
+            "OriginalText": "There is a man in the water sitting on a surfboard.",
+            "EditedText": "There is a man in the sea sitting on a surfboard.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes 'water' to 'sea,' which are synonyms in this context. The change does not alter the objects depicted in the scene but rather substitutes one synonym for another, violating the criteria regarding synonyms.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A traffic light has a green person on it indicating to walk.",
+            "EditedText": "A pedestrian signal has a green person on it indicating to walk.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, 'pedestrian signal,' is visually similar and functionally equivalent to a 'traffic light' in the context of signaling pedestrians.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A table with three glasses and some bottles.",
+            "EditedText": "A desk with three glasses and some bottles.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes the object from 'table' to 'desk', which are synonymous and not mutually exclusive. This violates the criteria of only making distinct changes to depicted objects. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "An elegant indoor train station containing several trains.",
+            "EditedText": "An elegant indoor train station containing several monorails.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement of trains with monorails implies the presence of monorail tracks not depicted in the original scene, violating region self-containment. Additionally, introducing monorails introduces a closely related category, which violates the criteria of avoiding synonyms or closely related sub-categories.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "The child in a racoon stocking cap is eating a banana.",
+            "EditedText": "The child is eating a banana.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit removes the description of the child's hat, a raccoon stocking cap. This modification is unrelated to the attributes, spatial relations, counting, or objects in the scene. It introduces unnecessary specificity by removing a detail that was previously given and does not make the edit distinct from the original image, which also depicts a child eating a banana. Therefore, the edit is rejected.",
+            "SuggestedCategory": "objects"
+        },
+        {
+            "OriginalText": "Three kids trying to feed a cow, while adults are under a tent",
+            "EditedText": "Three kids trying to feed a cow, while elders are under a canopy",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes 'adults' to 'elders' and 'tent' to 'canopy,' both of which are essentially synonymous in this context. This alteration does not modify the depicted objects themselves but rather substitutes one synonym for another, violating the criteria regarding synonyms.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Athletes sitting on bench at sideline during game.",
+            "EditedText": "Players are sitting on the bench at the sideline during the game",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes 'athletes' to 'players,' which are synonymous terms in this context. This alteration does not modify the depicted objects themselves but rather substitutes one synonym for another, violating the criteria regarding synonyms.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "a small duck in a large body of water ",
+            "EditedText": "a goose in a large body of water",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit alters the object 'duck' to 'goose', which are closely related sub-categories of the same object. This contradicts the guideline against changing objects with their synonyms or closely related sub-categories. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A man riding a wave on a surf board.",
+            "EditedText": "A man in a wet suit riding a wave on a surf board.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The addition of 'in a wet suit' to the description introduces an element not specified in the original text. While the original surfer might implicitly be wearing a wet suit, explicitly adding it does not replace an existing object but rather adds to the scene. This edit overlaps with the realm of potential reality without providing a direct object substitution, which is required. It violates the guidelines by assuming details not evident in the original caption, thereby failing to adhere strictly to the object modification criteria.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A parking machine is shown with a solar panel.",
+            "EditedText": "A parking meter is shown with a solar panel",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes 'parking machine' to 'parking meter,' which are closely related sub-categories of the same object. While both terms may sometimes be used interchangeably, the change does not significantly alter the object depicted in the scene. This violates the guideline against changing objects with their synonyms or closely related sub-categories. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A tray with six doughnuts laid out on it.",
+            "EditedText": "A tray with tweleve doughnuts arranged on it.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The edit involves changing the quantity of doughnuts from six to tweleve. This violates the criteria of not altering counting-related attributes.",
+            "SuggestedCategory": "counting"
+        },
+        {
+            "OriginalText": "A white toilet in a very small room.",
+            "EditedText": "A white toilet in a bathroom.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the description of the room from 'a very small room' to 'a bathroom,' which introduces unnecessary specificity and uncertainty. Since toilets are typically found in bathrooms, the original 'very small room' could implicitly be a bathroom. Therefore, the edit is rejected.",
+            "SuggestedCategory": "spatial-relation and attribute(others)"
+        },
+        {
+            "OriginalText": "A white toilet in a very small room.",
+            "EditedText": "A squat toilet is in a very small room.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit modifies 'white toilet' to 'squat toilet', which implies a different type of object is being depicted. However, it's possible that the original 'white toilet' is a squat toilet, and the color is incidental. Since the edit introduces unnecessary specificity and ambiguity about the depicted object, it is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Two man at the park and dog laying on the ground.",
+            "EditedText": "Two men are at the park and a dog is laying on the grass.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "Shifting from 'ground' to 'grass' adds unnecessary detail to the original scene, which likely already implies 'grass' by the context of being 'at the park.' This change introduces a specific attribute that doesn't alter the primary objects (men, dog) but rather describes the scene more specifically without a direct object change.",
+            "SuggestedCategory": "object(specificity)"
+        },
+        {
+            "OriginalText": "A plane is taking off from a run way.",
+            "EditedText": "A jet is taking off from a run way.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The edit involves replacing 'plane' with 'jet' which is a synonym and does not modify attributes depicted in the scene.",
+            "SuggestedCategory": "object(synonym)"
+        },
+        {
+            "OriginalText": "Three horses are right up to a wire fence.",
+            "EditedText": "Three cows are right up to a wire fence",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "This edit successfully transitions from 'horses' to 'cows', effectively altering the depicted object without breaching any specified criteria. The change is clear, swapping one distinct animal for another, which directly complies with the guidelines for object modifications.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "The child in a racoon stocking cap is eating a banana.",
+            "EditedText": "The child in a racoon stocking cap is eating an apple.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes 'banana' to 'apple,' which modifies the object depicted in the scene. However, this change does not violate any of the given criteria as it is a one-to-one replacement of one object with another and does not introduce any new objects, unnecessary specificity, or any modifications to attributes, spatial relations, or counting. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A bus parked next to a curb on an empty street.",
+            "EditedText": "A taxi parked next to a curb on an empty street.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes the object from 'bus' to 'taxi', replacing one existing object with another one, while adhering to the one-to-one rule and not adding new objects. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A bus parked next to a curb on an empty street.",
+            "EditedText": "A truck parked next to a curb on an empty street.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes the object from 'bus' to 'truck', replacing one existing object with another and adhering to the criteria of mutually exclusivity without altering the spatial relationship or introducing new objects. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A dog sitting on the grass.",
+            "EditedText": "A cat sitting on the grass.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "This edit directly substitutes 'dog' with 'cat', effectively altering the primary object without straying from the criteria. It exemplifies a clear, one-to-one object change that maintains the context and visual integrity of the scene, adhering strictly to the guidelines for acceptable modifications.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A man is taking an image on his phone of a bus. ",
+            "EditedText": "A man is taking an image on his phone of a truck.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes 'bus' to 'truck,' which alters the specific object depicted in the scene. This modification aligns with the criteria by only modifying one existing object and not introducing any new objects. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A person sitting on a boat while looking at the food he's transporting",
+            "EditedText": "A person standing on a boat while looking at the food he's transporting",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it changes the position of the person from 'sitting' to 'standing,' which violates the criteria of altering attributes depicted in the scene.",
+            "SuggestedCategory": "attribute(position)"
+        },
+        {
+            "OriginalText": "A train traveling down the train tracks near an empty field.",
+            "EditedText": "A bus traveling down the road near an empty field.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit modifies the object depicted in the scene, changing 'train' to 'bus' and 'train tracks' to 'road'. However, this violates the criteria of only altering objects depicted in the scene since it changes multiple components of the scene, introducing a bus and a road where there was previously a train and train tracks. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A train traveling down the train tracks near an empty field.",
+            "EditedText": "A train is traveling down the railway tracks near an empty field.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes 'train tracks' to 'railway tracks,' which are synonymous terms referring to the same object. This alteration does not modify the depicted object in the scene but rather substitutes one synonym for another, which violates the criteria regarding synonyms. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "a number of vegetables on a kitchen counter ",
+            "EditedText": "A number of vegetables are on the kitchen table",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "Changes the location of the vegetables from the 'counter' to the 'table,' which are synonymous terms.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "a kid is taking a bite out of a pizza",
+            "EditedText": "A kid is holding a pizza box.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit modifies the object depicted in the scene, changing 'a bite out of a pizza' to 'a pizza box.' Although the pizza box is related to the original object (pizza), introducing a pizza box without knowing it being opened or held implies a new object appearing out of nowhere, which violates the criteria of changing one existing object with another without introducing new objects. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Three baby sheep are in a pen with hay.",
+            "EditedText": "Three baby sheep are in a pen with straw.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the material in the pen from hay to straw. While hay and straw are visually distinct to some individuals, they are closely related materials with similar appearances. Given the potential ambiguity for those unfamiliar with agricultural terminology, it's better to reject the edit to avoid introducing unnecessary uncertainty.",
+            "SuggestedCategory": "attribute(material)"
+        },
+        {
+            "OriginalText": "A person riding skis on a snowy slope.",
+            "EditedText": "A person is riding skis on a snowy mountain.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, 'snowy mountain,' is not mutually exclusive with 'snowy slope.' Both images could depict mountainous regions with slopes, leading to identical scenes. Rejecting as it violates the criteria of ensuring visually distinct and mutually exclusive edits.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A Pan Am airlines 747 jet is taxiing along a runway.",
+            "EditedText": "A Pan Am airlines 747 jet is taxiing along the tarmac.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, 'tarmac,' is not mutually exclusive with 'runway.' Both tarmac and runway are commonly used interchangeably in aviation contexts. This leads to identical scenes and violates the criteria of ensuring visually distinct and mutually exclusive edits.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A pair of wood fired pizzas getting ready to be served.",
+            "EditedText": "A pair of baked pizzas are ready to be served",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit is rejected because it introduces unnecessary specificity by specifying the method of cooking ('wood fired') in the original text, which is not visually distinct attribute in the image. Additionally, both 'wood fired' and 'baked' pizzas are visually similar, making the edit ambiguous.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "a bus full of people driving down a street.",
+            "EditedText": "A double-decker bus full of people driving down a street.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, 'double-decker bus,' introduces unnecessary specificity and makes implicit assumptions about the original object. The original text does not provide information about the type of bus, so assuming it to be a single-decker is unnecessary.",
+            "SuggestedCategory": "object(specificity)"
+        },
+        {
+            "OriginalText": "The kitchen is very clean and move-in ready.",
+            "EditedText": "The kitchen is very clean and recently renovated.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The replacement objects, 'move-in ready' and 'recently renovated,' are paraphrases and not visually distinct or mutually exclusive. Both describe the condition of the kitchen but do not represent different objects or attributes in the scene.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "a person sitting before a computer in an office.",
+            "EditedText": "An elderly person is sitting before a computer in an office",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit modifies the original text by changing 'a person' to 'an elderly person'. This change introduces an implicit assumption about the person's age, which violates the criteria of not making implicit assumptions based on the original image. Additionally, 'a person' and 'an elderly person' are not mutually exclusive categories, as an elderly person is still a person. Therefore, the edit is rejected.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A group of people waiting at a bus stop.",
+            "EditedText": "A group of people waiting at a train station.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes the location from 'bus stop' to 'train station'. While this does modify the object depicted in the scene, it is a relatively large and distinct object that would significantly alter the context of the image. The train station might imply the presence of trains or platforms, which would not be consistent with the original context of standing at a bus stop. Therefore, the edit is rejected as it introduces unnecessary specificity and modifies the image drastically.",
+            "SuggestedCategory": "object(specificity)"
+        },
+        {
+            "OriginalText": "A surfer riding a surfboard on a wave.",
+            "EditedText": "A surfer riding a bodyboard on a wave.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The suggested edit should be rejected as the replacement objects, a surfboard and a bodyboard, are visually quite similar or synonymous. This violates the criteria of ensuring distinct replacements that are visually plausible within the context of the scene.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "The beachgoer is surfing on a surfboard.",
+            "EditedText": "The beachgoer is surfing on a kiteboard.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, a kiteboard, implies the presence of a kite for kiteboarding. However, the kite is not mentioned or depicted in the original scene. Introducing additional objects beyond the replacement region violates the criteria of only altering objects within the depicted scene. Therefore, the edit introduces unnecessary specificity by making implicit assumptions about the original surfboard, and it's uncertain if the required additional object for using the 'kiteboard' is available in the scene.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A skateboarder doing a trick at an outdoor skate park.",
+            "EditedText": "A BMX rider performing a trick at an outdoor skate park.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, a BMX rider, is not visually plausible within the context of the scene. Skateboarding and BMX riding are distinct activities that involve different equipment and techniques. Therefore, the replacement of a skateboarder with a BMX rider is not logically consistent with the original scene, as it would require significant modifications beyond the replacement object.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A bus is traveling down the road.",
+            "EditedText": "A trolleybus is traveling down the road.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The replacement object, a trolleybus, requires overhead wires for power, which are not mentioned or depicted in the original scene. Introducing additional objects beyond the replacement region violates the criteria of only altering objects within the depicted scene. Therefore, the edit introduces unnecessary specificity and assumes the presence of infrastructure not depicted in the original image.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "a person sitting before a computer in an office.",
+            "EditedText": "A person is sitting before a computer in a home office",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit modifies 'office' to 'home office', specifying the location. This change alters the entire environment rather than just the depicted objects themselves. Therefore, it does not adhere to the criteria of only altering objects depicted in the scene and introducing unnecessary specificity. The edit is rejected.",
+            "SuggestedCategory": "attribute(location)"
+        },
+        {
+            "OriginalText": "a kid is taking a bite out of a pizza",
+            "EditedText": "A kid is taking a bite out of a pizza slice.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit changes the description of the pizza from being whole to being a slice, which involves changing the size or counting aspect of the object. This modification does not align with the criteria of only modifying visual attributes. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(size)"
+        },
+        {
+            "OriginalText": "a kid is taking a bite out of a pizza",
+            "EditedText": "A kid is taking a bite out of a hamburger.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes 'pizza' to 'hamburger', which replaces one food with a distinct food and modifies the object depicted in the scene. This change does not introduce unnecessary specificity or violate any of the other given criteria. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "a man in an old fashioned baseball uniform hitting a baseball ",
+            "EditedText": "A woman in an old fashioned baseball uniform is hitting a baseball",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes the gender of the person depicted in the scene from 'man' to 'woman'. This change replaces one existing object with another and does not violate any of the given criteria, such as adding new objects or altering spatial relations, attributes, or count. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A bowl of fruit and foods on top of a wooden table.",
+            "EditedText": "A plate of fruit and foods on top of a wooden table.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The proposed edit involves a clear one-to-one change with distinct objects, replacing 'bowl' with 'plate'. It aligns with the criteria by only modifying objects depicted in the scene without introducing new ones or violating spatial relations. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A person riding a bicycle down the street.",
+            "EditedText": "A person riding a skateboard down the street.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": " The edit only modifies the object depicted in the scene, changing existing object 'bicycle' to 'skateboard'. This change does not violate any of the given criteria. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A girl with a party hat eating cake with icing.",
+            "EditedText": "A girl with a party hat is eating a donut with sprinkles.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit modifies the object depicted in the scene, changing 'cake with icing' to 'donut with sprinkles.' This change does not violate any of the given criteria as it is a one-to-one replacement of one object with another. The number of objects and the attributes related to them remain the same.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "Three baby sheep are in a pen with hay.",
+            "EditedText": "Three baby goats are in a pen with hay.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit changes 'sheep' to 'goats,' which modifies the object depicted in the scene. While goats and sheep are closely related animals, they are distinct species and can be visually different. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "An airplane flowing over bridges just before dark.",
+            "EditedText": "A helicopter flying over bridges just before dark.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit replaces the original object 'airplane' with 'helicopter', offering a distinct object while maintaining relevance to the scene. This change aligns with the criteria by replacing one existing object with another without introducing new objects or unnecessary details. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A book lying on a table next to a cup of coffee.",
+            "EditedText": "A tablet lying on a table next to a cup of coffee.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The edit only modifies the object depicted in the scene, changing existing 'book' to 'tablet'. This change does not violate any of the given criteria. Therefore, the edit is accepted",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A person pouring water into a glass.",
+            "EditedText": "A person pouring milk into a glass.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": " The edit only modifies the object depicted in the scene, changing 'water' to 'milk.' This change does not violate any of the given criteria. Therefore, the edit is accepted.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A red apple on a table.",
+            "EditedText": "A green apple on a table.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The proposed edit changes the color attribute of the apple from red to green, which aligns with the criteria of modifying attributes depicted in the scene. Therefore, the edit should be accepted.",
+            "SuggestedCategory": "attribute(color)"
+        },
+        {
+            "OriginalText": "A white toilet in a very small room.",
+            "EditedText": "A black toilet in a very small room.",
+            "Category": "attribute(color)",
+            "IsReject": "NO",
+            "FilterReason": "The proposed edit modifies the color attribute of the toilet from white to black, aligning with the criteria of modifying attributes depicted in the scene. Therefore, the edit should be accepted.",
+            "SuggestedCategory": "attribute(color)"
+        },
+        {
+            "OriginalText": "A cat sleeping in a small box.",
+            "EditedText": "A cat sleeping in a large box.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it involves changing the size attribute of the box from small to large. This violates the guideline of rejecting edits involving counting or size. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(size)"
+        },
+        {
+            "OriginalText": "A tall thin refrigerator and a trash can.",
+            "EditedText": "A small fridge and a trash can.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit should be rejected because it involves changing the size attribute of the refrigerator from 'tall thin' to 'small' which violates the guideline of not modifying attributes related to size. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(size)"
+        },
+        {
+            "OriginalText": "a small duck in a large body of water",
+            "EditedText": "a small duck in a small pond",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The edit from a 'large body of water' to a 'small pond' modifies the size attribute of the water body, directly conflicting with guidelines against changes related to size. Therefore, this edit cannot be accepted.",
+            "SuggestedCategory": "attribute(size)"
+        },
+        {
+            "OriginalText": "An airplane flowing over bridges just before dark.",
+            "EditedText": "An airplane flying over a suspension bridge just before dark.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit introduces implicit assumptions about the original scene, particularly regarding the type of bridge involved. It is unclear from the original text what type of bridges are present, and assuming a specific type introduces unnecessary specificity. This violates the guideline of not introducing unnecessary specificity and uncertainty. Therefore, the edit is rejected.",
+            "SuggestedCategory": "attribute(type)"
+        },
+        {
+            "OriginalText": "A bar bathroom with a mirror, sink and a light.",
+            "EditedText": "A bar bathroom with a mirror, sink and dim lighting.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The edit adds the attribute 'dim lighting' to the scene, it does not strictly modify existing attributes as per the criteria. Instead, it involves adding a new attribute 'dim lighting' rather than modifying existing ones. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(add)"
+        },
+        {
+            "OriginalText": "A person wearing a solid color shirt.",
+            "EditedText": "A person wearing a striped shirt.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The change from 'solid color' to 'striped' shirt is a direct modification of the shirt's pattern, fitting the criteria for altering visual attributes. This edit precisely addresses an attribute change — pattern in this case — making it a valid and clear alteration within the specified guidelines.",
+            "SuggestedCategory": "attribute(pattern)"
+        },
+        {
+            "OriginalText": "A square table in the kitchen.",
+            "EditedText": "A round table in the kitchen.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "It modifies the attribute of the table from 'square' to 'round' which aligns with the criteria of modifying shape attribute depicted in the scene. Therefore, the edit should be accepted.",
+            "SuggestedCategory": "attribute(shape)"
+        },
+        {
+            "OriginalText": "A red fire hydrant sits amid strewn pine needles and pine trees.",
+            "EditedText": "A blue fire hydrant sits amid strewn pine needles and pine trees.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The edit should be accepted as it modifies the color attribute of the fire hydrant from red to blue, which is a visual attribute.",
+            "SuggestedCategory": "attribute(color)"
+        },
+        {
+            "OriginalText": "A girl with a party hat eating cake with icing.",
+            "EditedText": "A girl with a party hat is eating a plain cake.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The edit modifies the attribute of the cake from 'cake with icing' to 'plain cake,' adhering to the criteria of changing attributes of objects depicted in the scene. This change is acceptable as it does not violate any of the given criteria.",
+            "SuggestedCategory": "attribute(type)"
+        },
+        {
+            "OriginalText": "A woman in a purple shirt throwing a frisbee",
+            "EditedText": "A woman in a red shirt throwing a frisbee",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The proposed edit modifies the color attribute of the woman's shirt from purple to red, which aligns with the criteria of modifying attributes depicted in the scene. Therefore, the edit should be accepted.",
+            "SuggestedCategory": "attribute(color)"
+        },
+        {
+            "OriginalText": "A baby girl holds a blue remote control as she lays on a bed with a white cover.",
+            "EditedText": "A baby girl holds a red remote control as she lays on a bed with a white cover.",
+            "IsReject": "NO",
+            "Category": "attribute",
+            "FilterReason": ":Changing the remote control's color from blue to red precisely targets an attribute change, conforming to guidelines for modifying visual attributes. This edit demonstrates a clear and acceptable alteration of the color attribute, fully aligning with the requirements for attribute modifications.",
+            "SuggestedCategory": "attribute(color)"
+        },
+        {
+            "OriginalText": "A bowl filled with flowers is placed on top of a wood table.",
+            "EditedText": "A bowl filled with flowers is placed on top of a marble table.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The edit modifies the attribute of the table from 'wood' to 'marble', which falls under the category of attribute changes for visual attributes such as material. This is acceptable according to the given criteria.",
+            "SuggestedCategory": "attribute(material)"
+        },
+        {
+            "OriginalText": "A blue car parked on the street.",
+            "EditedText": "A red car parked on the street.",
+            "Category": "attribute",
+            "IsReject": "NO",
+            "FilterReason": "The proposed edit should be accepted because it modifies the color attribute of the car from 'blue' to 'red' which aligns with the criteria of modifying attributes depicted in the scene, specifically the color attribute. Therefore, the edit should be accepted",
+            "SuggestedCategory": "attribute(color)"
+        },
+        {
+            "OriginalText": "A cell phone sits on top of a table and charger.",
+            "EditedText": "An iPod sits on top of a table and charger.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "The substitution of 'cell phone' with 'iPod' is a clear example of an acceptable object change, directly replacing one electronic device with another. This edit adheres to the guidelines by altering one depicted object to another distinct object, without adding or removing elements from the scene, thus fulfilling the requirements for a valid modification.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "There is a silver and blue bullet train passing by",
+            "EditedText": "There is a silver and blue bullet train rushing towards.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The transition from 'passing by' to 'rushing towards' attempts to modify the action depicted, yet both descriptions could visually represent the same motion, making the distinction challenging to discern in a static image. This subtle change in verb does not clearly alter the action in a way that meets the criteria for a significant and distinguishable edit, thus not justifying a valid action change.",
+            "SuggestedCategory": "action(motion)"
+        },
+        {
+            "OriginalText": "Trains are situated on the tracks in this model train track.",
+            "EditedText": "Trains are lined up on the tracks in this model train track.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "Changing 'situated' to 'lined up' merely clarifies the trains' arrangement without altering a physical attribute or introducing a new object. This edit, focusing on spatial relation, breaches the guideline that edits should modify objects or their non-spatial attributes. It does not provide a substantive attribute change as defined by the project criteria, but rather nuances the position, falling outside the scope of allowable modifications.",
+            "SuggestedCategory": "attribute(spatial-relation)"
+        },
+        {
+            "OriginalText": "A neat simple bedroom with a private bathroom attached",
+            "EditedText": "A neat simple bedroom with a private bathroom detached",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes 'attached' to 'detached' which alters the spatial relation between the bedroom and the bathroom. This change is related to spatial relations and violates the criteria of only altering objects depicted in the scene.",
+            "SuggestedCategory": "attribute(spatial-relation)"
+        },
+        {
+            "OriginalText": "A neat simple bedroom with a private bathroom attached",
+            "EditedText": "A neat simple bedroom with a private bathroom detached",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit replaces the attribute 'attached' with 'detached' which changes the spatial relation between the bedroom and the private bathroom. This change is related to spatial relations, which are not included in the acceptable attribute modifications. Therefore, the edit should be rejected.",
+            "SuggestedCategory": "attribute(spatial-relation)"
+        },
+        {
+            "OriginalText": "A double decker bus at night on a London street.",
+            "EditedText": "A red London bus at night on a city street.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "While the edit introduces a color attribute ('red') for the bus, it incorrectly categorizes the bus type by removing the 'double decker' specification, leading to ambiguity. The specificity of 'double decker' is lost, which is a significant attribute of the bus, especially in the context of London. Furthermore, changing 'London street' to 'city street' generalizes the location, reducing the specificity. The edit fails to maintain the original's distinctiveness and introduces confusion, violating the criteria for precise attribute changes.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "Modern train parked in an underground train station.",
+            "EditedText": "A sleek train parked in an underground train station.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'modern' to 'sleek' modifies an attribute of the train but does not introduce a distinct, mutually exclusive attribute change. 'Modern' and 'sleek' can be interpreted as synonyms in this context, both describing the train's appearance without providing a clear, distinguishable difference in attributes. This fails to meet the guidelines for attribute changes that require distinct and mutually exclusive modifications.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "A clock hanging from rafters of a building",
+            "EditedText": "A clock mounted on rafters of a building",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit is rejected because it only changes the attribute ('hanging' to 'mounted') of the clock, which does not result in a visually distinct difference in the scene.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "A plate of asparagus, broccoli, and some chicken.",
+            "EditedText": "A plate of roasted asparagus, broccoli, and some chicken.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit is rejected because the original text does not specify the attribute of the food items ('asparagus,' 'broccoli,' and 'chicken'). Introducing the attribute 'roasted' in the edited version assumes an unnecessary level of specificity not provided in the original context.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText":"A cat is sitting on a couch.",
+            "EditedText":"A black cat is sitting on a couch.",
+            "Category":"attribute",
+            "IsReject":"YES",
+            "FilterReason":"Since the original text does not specify the color of the cat which could be a black cat which would violate both implicit assumptions, unnecessary specificity and mutual exclusivity.",
+            "SuggestedCategory":"attribute"
+        },
+        {
+            "OriginalText": "A dog snuggled up in a blanket.",
+            "EditedText": "A white dog snuggled up in a blanket.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit is rejected because the original text does not specify the color of the dog, which could be a white dog. Introducing the attribute 'white' in the edited version assumes an unnecessary level of specificity not provided in the original context.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "A poodle sniffing at a potted plant outside.",
+            "EditedText": "A poodle puppy sniffing at a potted plant in the outside.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The proposed edit is rejected because the original text does not specify the age of the poodle, which could be a poodle puppy. Introducing the attribute 'puppy' in the edited version assumes an unnecessary level of specificity not provided in the original context.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "A bus parked on the side of a road near a cliff",
+            "EditedText": "A bus parked on the side of a highway near a bridge",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The switch from 'road' to 'highway' does not constitute a distinct attribute change but rather exchanges synonyms, where both terms describe surfaces for vehicle passage without significant distinction in this context. This edit fails to meet the specified criteria by not providing a clear, significant alteration of the described scene.",
+            "SuggestedCategory": "attribute(synonym)"
+        },
+        {
+            "OriginalText": "A view of a very nice kitchen, with a slider behind it.",
+            "EditedText": "A view of a very modern kitchen, with a slider behind it.",
+            "Category": "attribute",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'nice' to 'modern' is rejected because the terms are considered synonymous in the context of describing a kitchen's aesthetic, failing to provide a distinct, mutually exclusive attribute change. The edit does not clearly enhance the description with a visually verifiable attribute, as required by the guidelines for attribute changes. Therefore, it does not meet the criteria for an acceptable modification.",
+            "SuggestedCategory": "attribute"
+        },
+        {
+            "OriginalText": "Several people who are walking outside with umbrellas.",
+            "EditedText": "Several people are walking in a park with umbrellas.",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes the specificity of the location from a general 'outside' to a specific 'park.' This change introduces unnecessary specificity and alters the original description in a way that is unrelated to the depicted objects themselves.",
+            "SuggestedCategory": "object(specificity)"
+        },
+        {
+            "OriginalText": "A young lady surfing on the waves in blue waters.",
+            "EditedText": "A young lady riding the waves in blue waters.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'surfing' to 'riding the waves' is practically the same action for a static image.",
+            "SuggestedCategory": "action(surfing)"
+        },
+        {
+            "OriginalText": "A white plate topped with toasted bread and fries.",
+            "EditedText": "A white plate garnished with toasted bread and fries.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'topped' to 'garnished' is not acceptable as both terms can be visually similar in the context of food presentation.",
+            "SuggestedCategory": "action(garnish)"
+        },
+        {
+            "OriginalText": "A gray train moving down the tracks with great speed.",
+            "EditedText": "A gray train moving up the tracks with great speed.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from move up to down is impossible to capture in a single image.",
+            "SuggestedCategory": "action(motion)"
+        },
+        {
+            "OriginalText": "A man and woman play an interactive video game.",
+            "EditedText": "A man teaches a woman how to play a video game.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'play' to 'teach' is difficult to visualize from a single image as two action may be happening at the same time.",
+            "SuggestedCategory": "action(teach)"
+        },
+        {
+            "OriginalText": "Two men are snow boarding in the mountain.",
+            "EditedText": "Two men are snowboarding down in the mountain.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The addition of 'down' as they might snowboarding down in the original image, not enough information.",
+            "SuggestedCategory": "action(snowboarding)"
+        },
+        {
+            "OriginalText": "A traffic light hanging over a street under a blue sky.",
+            "EditedText": "A stop sign hanging over a street under a blue sky.",
+            "Category": "object",
+            "IsReject": "NO",
+            "FilterReason": "It only modifies the object depicted in the scene, changing 'traffic light' to 'stop sign'. While this introduces a different object, it does not violate any of the given criteria.",
+            "SuggestedCategory": "object"
+        },
+        {
+            "OriginalText": "A stuffed teddy bear has its picture taken",
+            "EditedText": "A cuddly toy has its picture taken",
+            "Category": "object",
+            "IsReject": "YES",
+            "FilterReason": "The edit changes 'stuffed teddy bear' to 'cuddly toy,' which alters the specific object depicted in the scene. This change introduces unnecessary specificity and alters the original description in a way that is unrelated to the depicted objects themselves",
+            "SuggestedCategory": "object(specificity)"
+        },
+        {
+            "OriginalText": "A large group of people looking at motorcycles in a lot.",
+            "EditedText": "A large group of people pointing at motorcycles in a lot.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "Changing 'looking at' to 'pointing at' is nearly the same thing for a static image.",
+            "SuggestedCategory": "action(pointing)"
+        },
+        {
+            "OriginalText": "A brown teddy bear wearing a polka dot boy tie.",
+            "EditedText": "A brown teddy bear is sitting and wearing a polka dot boy tie.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The addition of 'sitting' does not gurantee hard-negaive as we cannot confirm whether the teddy bear was sitting in the original image.",
+            "SuggestedCategory": "action(sitting)"
+        },
+        {
+            "OriginalText": "There is a silver and blue bullet train passing by",
+            "EditedText": "There is a silver and blue bullet train parked.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'passing by' to 'parked' is not acceptable as it is impossible to capture motion in a static image. Therefore, both scenarios could appear visually similar.",
+            "SuggestedCategory": "action(motion)"
+        },
+        {
+            "OriginalText": "A vase is sitting on a table in a bare room.",
+            "EditedText": "A vase is lying on a table in a bare room.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'sitting' to 'lying' does not create a hard-negative instance. Both 'sitting' and 'lying' can imply similar orientations or positions of the vase.",
+            "SuggestedCategory": "action(state)"
+        },
+        {
+            "OriginalText": "A group of people cook inside of a kitchen",
+            "EditedText": "A group of people bake inside of a kitchen",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "The change from 'cook' to 'bake' does not create a hard-negative instance. Baking is a subset of cooking.",
+            "SuggestedCategory": "action(verb)"
+        },
+        {
+            "OriginalText": "The boats with red sails are on the river",
+            "EditedText": "The boats with red sails are docked.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "Even though it is a valid edit, the change requires location change of boat which is very difficult to do without substantially altering the image regions.",
+            "SuggestedCategory": "action(location)"
+        },
+        {
+            "OriginalText": "A traffic light hanging over a street under a blue sky.",
+            "EditedText": "A traffic light standing over a street under a blue sky.",
+            "Category": "action",
+            "IsReject": "YES",
+            "FilterReason": "Both 'hanging' and 'standing' can imply similar positions of the traffic light.",
+            "SuggestedCategory": "action(state)"
+        }
+    ]
+}

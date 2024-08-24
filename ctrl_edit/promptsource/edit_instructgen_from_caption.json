@@ -1,0 +1,2331 @@
+{
+    "prompt_name": "dino_diffusion",
+    "meta_description": "A prompt template that transforms source image captions based on provided edited phrase, resulting in new, contextually adapted captions.",
+    "io_structure": {
+        "input_keys": "InputCaption",
+        "output_json_keys": [
+            "SelectedPhrase",
+            "EditedPhrase",
+            "EditedRegionPhrase",
+            "EditedCaption",
+            "Category"
+        ]
+    },
+    "task_instruction_object": "As an AI language model your task involves making minimal, targeted edits to a caption that describes an image, guiding corresponding visual changes to be made in the edited version of the image. Follow these structured steps:\n\n1. **Suggest Edit:**\n   - Identify and suggest a specific edit from the given caption. Your edit should only change an object in the scene. The edit must adhere to the following criteria:\n   - Object changes should be visually distinct and mutually exclusive. Do not replace an object with it's synonyms or closely related sub-categories.\n       - The replacement object must fit within the original object's region and be visually plausible within the scene.\n       - Maintain a one-to-one replacement ratio; do not introduce additional objects.\n      - **General Criteria for Edits:**\n       - Avoid any changes related to action, spatial relations, counting, or the size of objects.\n       - Edits must be visually and contextually plausible, ensuring the scene remains coherent and the edit does not introduce inconsistencies in other parts of the image.\n\n2. **Create an Edited Caption:**\n   - Draft a new caption reflecting the image post-edit.\n\n3. **Specify Edit Category:**\n   - Clearly state that your suggested edit falls under 'Object'.\n\nA few referrence examples in JSON are given below.",
+    "task_instruction_attribute": "As an AI language model your task involves making minimal, targeted edits to a caption that describes an image, guiding corresponding visual changes in the edited version of the image. Follow these structured steps:\n\n1. **Suggest Edit:**\n   - Identify and suggest a specific edit from the given caption if it is editable. Your edit should modify an attribute of existing objects in the caption. The edit must adhere to the following criteria:\n     - Change only the attributes of an object from one of the allowed sub-category: color, pattern, shape, appearance, material, state, condition. Replacing an object itself or introducing new attributes is not allowed.\n       - Attribute changes must be distinct, mutually exclusive, and not synonymous.\n       - The edited attribute should make visual and contextual sense within the image without altering its overall composition.\n     - **General Criteria for Edits:**\n       - Do not suggest attribute changes related to spatial **relations**, **counting**, or the **size** of objects.\n       - Edits must be visually and contextually plausible, ensuring the scene remains coherent and the edit does not introduce inconsistencies.\n\n2. **Create an Edited Caption:**\n   - Draft a new caption reflecting the image post-edit.\n\n3. **Specify Edit Category:**\n   - Clearly state that your suggested edit falls under 'Attribute'. If you cannot change attribute due to missing attribute in the given caption, please output 'EMPTY'.\n\nA few reference examples in JSON are given below.",
+    "task_instruction": "Your task involves making minimal, targeted edits to a caption that describes an image, guiding corresponding visual changes in the edited version of the image. Follow these structured steps:\n\n1. **Suggest Edit:**\n   - Identify and suggest a specific edit from the given caption. Your edit can either change an object in the scene or modify an attribute of an object.\n   - **The edit must adhere to the following criteria:**\n     - **For Object Edits:**\n       - Object changes should be visually distinct and mutually exclusive. Do not replace objects with their synonyms or closely related sub-categories.\n       - The replacement object must fit within the original object's region and be visually plausible within the scene.\n       - Maintain a one-to-one replacement ratio; do not introduce additional objects.\n       - Ensure the edit does not necessitate further changes in other parts of the image for scene consistency.\n       - Reject the edit if it introduces unnecessary specificity or makes implicit assumptions about the object not evident in the original context.\n     - **For Attribute Edits:**\n       - Change only the attributes of an object (e.g., color, pattern, shape, material) without altering the object itself or introducing new attributes.\n       - Attribute changes must be distinct, mutually exclusive, and not synonymous.\n       - The edited attribute should make visual and contextual sense within the image without altering its overall composition.\n       - Reject edits involving counting, size changes, or adding new attributes instead of modifying existing ones.\n     - **General Criteria for Both Object and Attribute Edits:**\n       - Avoid changes related to spatial relations, counting, or the size of objects.\n       - Edits must be visually and contextually plausible, ensuring the scene remains coherent and the edit does not introduce inconsistencies.\n\n2. **Create an Edited Caption:**\n   - Draft a new caption reflecting the image post-edit. It should accurately detail the change and remain coherent with the image's original context.\n\n3. **Specify Edit Category:**\n   - Clearly state if your suggested edit falls under 'Object' or 'Attribute'.\n\nA few referrence examples are given below.",
+    "samples": {
+        "object": [
+            {
+                "InputCaption": "A glass of ice water sitting next to a wine glass.",
+                "SelectedPhrase": "glass of ice water",
+                "EditedPhrase": "glass of milk",
+                "EditedRegionPhrase": "A glass of milk",
+                "EditedCaption": "A glass of milk sitting next to a wine glass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A glass of ice water sitting next to a wine glass.",
+                "SelectedPhrase": "glass of ice water",
+                "EditedPhrase": "bottle of beer",
+                "EditedRegionPhrase": "A bottle of beer",
+                "EditedCaption": "A bottle of beer sitting next to a wine glass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A glass of ice water sitting next to a wine glass.",
+                "SelectedPhrase": "glass of ice water",
+                "EditedPhrase": "cup of tea",
+                "EditedRegionPhrase": "A cup of tea",
+                "EditedCaption": "A cup of tea sitting next to a wine glass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small bathroom with a toilet, sink and tub.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "magazine rack",
+                "EditedRegionPhrase": "A small bathroom with a magazine rack",
+                "EditedCaption": "A small bathroom with a magazine rack, sink and tub.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small bathroom with a toilet, sink and tub.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "plant",
+                "EditedRegionPhrase": "A plant",
+                "EditedCaption": "A small bathroom with a plant, sink and tub.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small bathroom with a toilet, sink and tub.",
+                "SelectedPhrase": "sink",
+                "EditedPhrase": "towel rack",
+                "EditedRegionPhrase": "A towel rack",
+                "EditedCaption": "A small bathroom with a toilet, towel rack and tub.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small bathroom with a toilet, sink and tub.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "trash bin",
+                "EditedRegionPhrase": "A trash bin",
+                "EditedCaption": "A small bathroom with a trash bin, sink and tub.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small bathroom with a toilet, sink and tub.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "dog",
+                "EditedRegionPhrase": "A dog",
+                "EditedCaption": "A small bathroom with a dog, sink and tub.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bar bathroom with a mirror, sink and a light.",
+                "SelectedPhrase": "sink",
+                "EditedPhrase": "trash bin",
+                "EditedRegionPhrase": "A trash bin",
+                "EditedCaption": "A bar bathroom with a mirror, trash bin and a light.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small bathroom with a mirror, sink and a light.",
+                "SelectedPhrase": "mirror",
+                "EditedPhrase": "painting",
+                "EditedRegionPhrase": "A painting",
+                "EditedCaption": "A small bathroom with a painting, sink and a light.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A picture of a desktop computer next to a tiny laptop.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "vase",
+                "EditedRegionPhrase": "A tiny vase",
+                "EditedCaption": "A picture of a desktop computer next to a tiny vase.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A picture of a desktop computer next to a tiny laptop.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "coffee mug",
+                "EditedRegionPhrase": "A tiny coffee mug",
+                "EditedCaption": "A picture of a desktop computer next to a tiny coffee mug.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A picture of a desktop computer next to a tiny laptop.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "smartphone",
+                "EditedRegionPhrase": "A tiny smartphone",
+                "EditedCaption": "A picture of a desktop computer next to a tiny smartphone.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A picture of a desktop computer next to a tiny laptop.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "digital camera",
+                "EditedRegionPhrase": "A tiny digital camera",
+                "EditedCaption": "A picture of a desktop computer next to a tiny digital camera.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A picture of a desktop computer next to a tiny laptop.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "e-reader",
+                "EditedRegionPhrase": "A tiny e-reader",
+                "EditedCaption": "A picture of a desktop computer next to a tiny e-reader.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A picture of a desktop computer next to a tiny laptop.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "tablet",
+                "EditedRegionPhrase": "A tiny tablet",
+                "EditedCaption": "A picture of a desktop computer next to a tiny tablet.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "cactus",
+                "EditedRegionPhrase": "A cactus on top of a window sill",
+                "EditedCaption": "A cactus sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "clay pot",
+                "EditedRegionPhrase": "A clay pot on top of a window sill",
+                "EditedCaption": "A clay pot sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "toy",
+                "EditedRegionPhrase": "A toy",
+                "EditedCaption": "A toy sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "frog",
+                "EditedRegionPhrase": "A frog",
+                "EditedCaption": "A frog sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "chicken",
+                "EditedRegionPhrase": "A chicken",
+                "EditedCaption": "A chicken sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "sculpture",
+                "EditedRegionPhrase": "A sculpture",
+                "EditedCaption": "A sculpture sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "small dog",
+                "EditedRegionPhrase": "A small dog",
+                "EditedCaption": "A small dog sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "bird",
+                "EditedRegionPhrase": "A bird",
+                "EditedCaption": "A bird sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cat sitting on top of a window sill on an orange building.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "flower pot",
+                "EditedRegionPhrase": "A flower pot",
+                "EditedCaption": "A flower pot sitting on top of a window sill on an orange building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A couple people standing by a hydrant that someone turned on.",
+                "SelectedPhrase": "people",
+                "EditedPhrase": "horses",
+                "EditedRegionPhrase": "A couple horses",
+                "EditedCaption": "A couple horses standing by a hydrant that someone turned on.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A large jetliner sitting on top of an airport runway.",
+                "SelectedPhrase": "jetliner",
+                "EditedPhrase": "military aircraft",
+                "EditedRegionPhrase": "A military aircraft",
+                "EditedCaption": "A military aircraft sitting on top of an airport runway.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a very large airplane that is parked on a runway.",
+                "SelectedPhrase": "airplane",
+                "EditedPhrase": "cargo truck",
+                "EditedRegionPhrase": "A very large cargo truck",
+                "EditedCaption": "a very large cargo truck that is parked on a runway.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a very large airplane that is parked on a runway.",
+                "SelectedPhrase": "airplane",
+                "EditedPhrase": "hot air balloon",
+                "EditedRegionPhrase": "A very large hot air balloon",
+                "EditedCaption": "a very large hot air balloon that is parked on a runway.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a very large airplane that is parked on a runway.",
+                "SelectedPhrase": "airplane",
+                "EditedPhrase": "spaceship",
+                "EditedRegionPhrase": "A very large spaceship",
+                "EditedCaption": "a very large spaceship that is parked on a runway.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small salad made in a cereal bowl.",
+                "SelectedPhrase": "salad",
+                "EditedPhrase": "soup",
+                "EditedRegionPhrase": "A small soup",
+                "EditedCaption": "A small soup made in a cereal bowl.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small salad made in a cereal bowl.",
+                "SelectedPhrase": "salad",
+                "EditedPhrase": "oatmeal",
+                "EditedRegionPhrase": "A small oatmeal",
+                "EditedCaption": "A small oatmeal made in a cereal bowl.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small salad made in a cereal bowl.",
+                "SelectedPhrase": "salad",
+                "EditedPhrase": "pasta",
+                "EditedRegionPhrase": "A small pasta",
+                "EditedCaption": "A small pasta made in a cereal bowl.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small salad made in a cereal bowl.",
+                "SelectedPhrase": "salad",
+                "EditedPhrase": "rice dish",
+                "EditedRegionPhrase": "A small rice dish",
+                "EditedCaption": "A small rice dish made in a cereal bowl.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cart with wheels with several trunks atop it.",
+                "SelectedPhrase": "trunks",
+                "EditedPhrase": "cardboard boxes",
+                "EditedRegionPhrase": "Several cardboard boxes",
+                "EditedCaption": "A cart with wheels with several cardboard boxes atop it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cart with wheels with several trunks atop it.",
+                "SelectedPhrase": "trunks",
+                "EditedPhrase": "bags of groceries",
+                "EditedRegionPhrase": "Several bags of groceries",
+                "EditedCaption": "A cart with wheels with several bags of groceries atop it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cart with wheels with several trunks atop it.",
+                "SelectedPhrase": "trunks",
+                "EditedPhrase": "suitcases",
+                "EditedRegionPhrase": "Several suitcases",
+                "EditedCaption": "A cart with wheels with several suitcases atop it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small television displayed on fireplace mantel in living area of home.",
+                "SelectedPhrase": "television",
+                "EditedPhrase": "sculpture",
+                "EditedRegionPhrase": "Small sculpture",
+                "EditedCaption": "Small sculpture displayed on fireplace mantel in living area of home.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small television displayed on fireplace mantel in living area of home.",
+                "SelectedPhrase": "television",
+                "EditedPhrase": "laptop",
+                "EditedRegionPhrase": "Small laptop",
+                "EditedCaption": "Small laptop displayed on fireplace mantel in living area of home.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small television displayed on fireplace mantel in living area of home.",
+                "SelectedPhrase": "television",
+                "EditedPhrase": "vase of flowers",
+                "EditedRegionPhrase": "Small vase of flowers",
+                "EditedCaption": "Small vase of flowers displayed on fireplace mantel in living area of home.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small television displayed on fireplace mantel in living area of home.",
+                "SelectedPhrase": "television",
+                "EditedPhrase": "decorative clock",
+                "EditedRegionPhrase": "Small decorative clock",
+                "EditedCaption": "Small decorative clock displayed on fireplace mantel in living area of home.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bunch of doughnuts going down the assembly line to get glazed.",
+                "SelectedPhrase": "doughnuts",
+                "EditedPhrase": "croissants",
+                "EditedRegionPhrase": "A bunch of croissants",
+                "EditedCaption": "A bunch of croissants going down the assembly line to get glazed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bunch of doughnuts going down the assembly line to get glazed.",
+                "SelectedPhrase": "doughnuts",
+                "EditedPhrase": "apple fritters",
+                "EditedRegionPhrase": "A bunch of apple fritters",
+                "EditedCaption": "A bunch of apple fritters going down the assembly line to get glazed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bunch of doughnuts going down the assembly line to get glazed.",
+                "SelectedPhrase": "doughnuts",
+                "EditedPhrase": "bagels",
+                "EditedRegionPhrase": "A bunch of bagels",
+                "EditedCaption": "A bunch of bagels going down the assembly line to get glazed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bunch of doughnuts going down the assembly line to get glazed.",
+                "SelectedPhrase": "doughnuts",
+                "EditedPhrase": "scones",
+                "EditedRegionPhrase": "A bunch of scones",
+                "EditedCaption": "A bunch of scones going down the assembly line to get glazed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bunch of doughnuts going down the assembly line to get glazed.",
+                "SelectedPhrase": "doughnuts",
+                "EditedPhrase": "pastries",
+                "EditedRegionPhrase": "A bunch of pastries",
+                "EditedCaption": "A bunch of pastries going down the assembly line to get glazed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small pizza pie sitting on top of a plate on the table.",
+                "SelectedPhrase": "pizza pie",
+                "EditedPhrase": "apple pie",
+                "EditedRegionPhrase": "Small apple pie",
+                "EditedCaption": "Small apple pie sitting on top of a plate on the table.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small pizza pie sitting on top of a plate on the table.",
+                "SelectedPhrase": "pizza pie",
+                "EditedPhrase": "cheesecake",
+                "EditedRegionPhrase": "Small cheesecake",
+                "EditedCaption": "Small cheesecake sitting on top of a plate on the table.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small pizza pie sitting on top of a plate on the table.",
+                "SelectedPhrase": "pizza pie",
+                "EditedPhrase": "quiche",
+                "EditedRegionPhrase": "Small quiche on top of a plate",
+                "EditedCaption": "Small quiche sitting on top of a plate on the table.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small pizza pie sitting on top of a plate on the table.",
+                "SelectedPhrase": "pizza pie",
+                "EditedPhrase": "tart",
+                "EditedRegionPhrase": "Small tart",
+                "EditedCaption": "Small tart sitting on top of a plate on the table.s",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Small pizza pie sitting on top of a plate on the table.",
+                "SelectedPhrase": "pizza pie",
+                "EditedPhrase": "chocolate cake",
+                "EditedRegionPhrase": "Small chocolate cake",
+                "EditedCaption": "Small chocolate cake sitting on top of a plate on the table.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A young boy stands barefoot on a skateboard wearing a helmet.",
+                "SelectedPhrase": "helmet",
+                "EditedPhrase": "cap",
+                "EditedRegionPhrase": "A young boy wearing a cap",
+                "EditedCaption": "A young boy stands barefoot on a skateboard wearing a cap.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A young boy stands barefoot on a skateboard wearing a helmet.",
+                "SelectedPhrase": "barefoot",
+                "EditedPhrase": "wearing socks",
+                "EditedRegionPhrase": "A young boy wearing socks",
+                "EditedCaption": "A young boy wearing socks stands on a skateboard wearing a helmet.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A young boy stands barefoot on a skateboard wearing a helmet.",
+                "SelectedPhrase": "barefoot",
+                "EditedPhrase": "wearing shoes",
+                "EditedRegionPhrase": "A young boy wearing shoes",
+                "EditedCaption": "A young boy wearing shoes stands on a skateboard wearing a helmet.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A young boy stands barefoot on a skateboard wearing a helmet.",
+                "SelectedPhrase": "skateboard",
+                "EditedPhrase": "roller skates",
+                "EditedRegionPhrase": "Roller skates",
+                "EditedCaption": "A young boy wearing roller skates stands wearing a helmet.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man wearing a toboggan standing next to a horse.",
+                "SelectedPhrase": "toboggan",
+                "EditedPhrase": "cowboy hat",
+                "EditedRegionPhrase": "A man wearing a cowboy hat",
+                "EditedCaption": "A man wearing a cowboy hat standing next to a horse.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two birds sitting on old fence posts with a snowy mountain in the background.",
+                "SelectedPhrase": "birds",
+                "EditedPhrase": "fish",
+                "EditedRegionPhrase": "Two fish",
+                "EditedCaption": "Two fish sitting on old fence posts with a snowy mountain in the background.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two birds sitting on old fence posts with a snowy mountain in the background.",
+                "SelectedPhrase": "birds",
+                "EditedPhrase": "squirrels",
+                "EditedRegionPhrase": "Two squirrels",
+                "EditedCaption": "Two squirrels sitting on old fence posts with a snowy mountain in the background.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two birds sitting on old fence posts with a snowy mountain in the background.",
+                "SelectedPhrase": "birds",
+                "EditedPhrase": "snow owls",
+                "EditedRegionPhrase": "Two snow owls",
+                "EditedCaption": "Two snow owls sitting on old fence posts with a snowy mountain in the background.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two birds sitting on old fence posts with a snowy mountain in the background.",
+                "SelectedPhrase": "birds",
+                "EditedPhrase": "rabbits",
+                "EditedRegionPhrase": "Two rabbits",
+                "EditedCaption": "Two rabbits sitting at the base of old fence posts with a snowy mountain in the background.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A United airline jet flies high in a cloudless sky.",
+                "SelectedPhrase": "United airline jet",
+                "EditedPhrase": "Airforce jet",
+                "EditedRegionPhrase": "An Airforce jet",
+                "EditedCaption": "An Airforce jet flies high in a cloudless sky.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Numerous slices of pork on top of a mound of white rice.",
+                "SelectedPhrase": "pork",
+                "EditedPhrase": "beef",
+                "EditedRegionPhrase": "Numerous slices of beef",
+                "EditedCaption": "Numerous slices of beef on top of a mound of white rice.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Numerous slices of pork on top of a mound of white rice.",
+                "SelectedPhrase": "pork",
+                "EditedPhrase": "chicken",
+                "EditedRegionPhrase": "Numerous slices of chicken",
+                "EditedCaption": "Numerous slices of chicken on top of a mound of white rice.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Numerous slices of pork on top of a mound of white rice.",
+                "SelectedPhrase": "pork",
+                "EditedPhrase": "vegetables",
+                "EditedRegionPhrase": "Numerous slices of vegetables",
+                "EditedCaption": "Numerous slices of vegetables on top of a mound of white rice.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Numerous slices of pork on top of a mound of white rice.",
+                "SelectedPhrase": "pork",
+                "EditedPhrase": "salmon",
+                "EditedRegionPhrase": "Numerous slices of salmon",
+                "EditedCaption": "Numerous slices of salmon on top of a mound of white rice.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Numerous slices of pork on top of a mound of white rice.",
+                "SelectedPhrase": "pork",
+                "EditedPhrase": "tofu",
+                "EditedRegionPhrase": "Numerous slices of tofu",
+                "EditedCaption": "Numerous slices of tofu on top of a mound of white rice.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dog sitting in the passenger seat of a car.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "amazon package",
+                "EditedRegionPhrase": "An amazon package",
+                "EditedCaption": "An amazon package sitting in the passenger seat of a car.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dog sitting in the passenger seat of a car.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "briefcase",
+                "EditedRegionPhrase": "A briefcase",
+                "EditedCaption": "A briefcase sitting in the passenger seat of a car.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dog sitting in the passenger seat of a car.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "shopping bag",
+                "EditedRegionPhrase": "A shopping bag",
+                "EditedCaption": "A shopping bag sitting in the passenger seat of a car.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dog sitting in the passenger seat of a car",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "backpack",
+                "EditedRegionPhrase": "A backpack",
+                "EditedCaption": "A backpack sitting in the passenger seat of a car",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dog sitting in the passenger seat of a car.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "cat",
+                "EditedRegionPhrase": "A cat",
+                "EditedCaption": "A cat sitting in the passenger seat of a car.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A little girl wearing a hat and holding a glove.",
+                "SelectedPhrase": "hat",
+                "EditedPhrase": "scarf",
+                "EditedRegionPhrase": "A girl waring a scarf",
+                "EditedCaption": "A little girl wearing a scarf and holding a glove.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A large three layer happy birthday cake on a plate.",
+                "SelectedPhrase": "happy birthday cake",
+                "EditedPhrase": "anniversary cake",
+                "EditedRegionPhrase": "A large three layer anniversary cake",
+                "EditedCaption": "A large three layer anniversary cake on a plate.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A large three layer happy birthday cake on a plate.",
+                "SelectedPhrase": "happy birthday cake",
+                "EditedPhrase": "wedding cake",
+                "EditedRegionPhrase": "A large three layer wedding cake",
+                "EditedCaption": "A large three layer wedding cake on a plate.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A large three layer happy birthday cake on a plate.",
+                "SelectedPhrase": "happy birthday cake",
+                "EditedPhrase": "fruit tart",
+                "EditedRegionPhrase": "A large three layer fruit tart",
+                "EditedCaption": "A large three layer fruit tart on a plate.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Man walking with two dogs over a bridge.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "pigs",
+                "EditedRegionPhrase": "two pigs",
+                "EditedCaption": "Man walking with two pigs over a bridge.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Man walking with two dogs over a bridge.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "goats",
+                "EditedRegionPhrase": "two goats",
+                "EditedCaption": "Man walking with two goats over a bridge.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Man walking with two dogs over a bridge.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "cats",
+                "EditedRegionPhrase": "two cats",
+                "EditedCaption": "Man walking with two cats over a bridge.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Man walking with two dogs over a bridge.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "ducks",
+                "EditedRegionPhrase": "Two ducks",
+                "EditedCaption": "Man walking with two ducks over a bridge.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Man walking with two dogs over a bridge.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "llamas",
+                "EditedRegionPhrase": "Two llamas",
+                "EditedCaption": "Man walking with two llamas over a bridge.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Graffiti on an open door to a restroom stall.",
+                "SelectedPhrase": "graffiti",
+                "EditedPhrase": "poster",
+                "EditedRegionPhrase": "Poster",
+                "EditedCaption": "Poster on an open door to a restroom stall.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Graffiti on an open door to a restroom stall.",
+                "SelectedPhrase": "graffiti",
+                "EditedPhrase": "notice",
+                "EditedRegionPhrase": "Notice",
+                "EditedCaption": "Notice on an open door to a restroom stall.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Graffiti on an open door to a restroom stall.",
+                "SelectedPhrase": "graffiti",
+                "EditedPhrase": "mirror",
+                "EditedRegionPhrase": "A mirror",
+                "EditedCaption": "Mirror on an open door to a restroom stall.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Graffiti on an open door to a restroom stall.",
+                "SelectedPhrase": "graffiti",
+                "EditedPhrase": "sign",
+                "EditedRegionPhrase": "A sign",
+                "EditedCaption": "Sign on an open door to a restroom stall.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Three kids trying to feed a cow, while adults are under a tent.",
+                "SelectedPhrase": "cow",
+                "EditedPhrase": "chicken",
+                "EditedRegionPhrase": "A chicken",
+                "EditedCaption": "Three kids trying to feed a chicken, while adults are under a tent.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Three kids trying to feed a cow, while adults are under a tent.",
+                "SelectedPhrase": "cow",
+                "EditedPhrase": "horse",
+                "EditedRegionPhrase": "A horse",
+                "EditedCaption": "Three kids trying to feed a horse, while adults are under a tent.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Three kids trying to feed a cow, while adults are under a tent.",
+                "SelectedPhrase": "cow",
+                "EditedPhrase": "donkey",
+                "EditedRegionPhrase": "A donkey",
+                "EditedCaption": "Three kids trying to feed a donkey, while adults are under a tent.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Three kids trying to feed a cow, while adults are under a tent.",
+                "SelectedPhrase": "cow",
+                "EditedPhrase": "llama",
+                "EditedRegionPhrase": "A llama",
+                "EditedCaption": "Three kids trying to feed a llama, while adults are under a tent.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Three kids trying to feed a cow, while adults are under a tent.",
+                "SelectedPhrase": "cow",
+                "EditedPhrase": "large deer",
+                "EditedRegionPhrase": "A large deer",
+                "EditedCaption": "Three kids trying to feed a large deer, while adults are under a tent.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A red apple is being cut into sections by two knives.",
+                "SelectedPhrase": "red apple",
+                "EditedPhrase": "orange",
+                "EditedRegionPhrase": "A orange is being cut.",
+                "EditedCaption": "A orange is being cut into sections by two knives.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A group of people in line at a food truck.",
+                "SelectedPhrase": "food truck",
+                "EditedPhrase": "ice cream truck",
+                "EditedRegionPhrase": "An ice cream truck",
+                "EditedCaption": "A group of people in line at an ice cream truck.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A group of people in line at a food truck.",
+                "SelectedPhrase": "food truck",
+                "EditedPhrase": "bookmobile",
+                "EditedRegionPhrase": "A bookmobile",
+                "EditedCaption": "A group of people in line at a bookmobile.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A group of people in line at a food truck.",
+                "SelectedPhrase": "food truck",
+                "EditedPhrase": "coffee cart",
+                "EditedRegionPhrase": "A coffee cart",
+                "EditedCaption": "A group of people in line at a coffee cart.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A person that is touching some food on a table.",
+                "SelectedPhrase": "food",
+                "EditedPhrase": "toy",
+                "EditedRegionPhrase": "A person that is touching some toy",
+                "EditedCaption": "A person that is touching some toy on a table.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two large dogs asleep on a bed.",
+                "SelectedPhrase": "large dogs",
+                "EditedPhrase": "large baskets",
+                "EditedRegionPhrase": "Two large baskets",
+                "EditedCaption": "Two large baskets on a bed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two large dogs asleep on a bed.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "stuffed animals",
+                "EditedRegionPhrase": "Two large stuffed animals",
+                "EditedCaption": "Two large stuffed animals on a bed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Two large dogs asleep on a bed.",
+                "SelectedPhrase": "dogs",
+                "EditedPhrase": "chickens",
+                "EditedRegionPhrase": "Two large chicken",
+                "EditedCaption": "Two large chickens asleep on a bed.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A brown and black horse is grazing in the grass.",
+                "SelectedPhrase": "brown and black horse",
+                "EditedPhrase": "brown and black cows",
+                "EditedRegionPhrase": "A brown and black cow",
+                "EditedCaption": "A brown and black cow is grazing in the grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A brown and black horse is grazing in the grass.",
+                "SelectedPhrase": "brown and black horse",
+                "EditedPhrase": "brown and black goat",
+                "EditedRegionPhrase": "A brown and black goat",
+                "EditedCaption": "A brown and black goat is grazing in the grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A brown and black horse is grazing in the grass.",
+                "SelectedPhrase": "brown and black horse",
+                "EditedPhrase": "brown and black llamas",
+                "EditedRegionPhrase": "A brown and black llama",
+                "EditedCaption": "A brown and black llama is grazing in the grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A brown and black horse is grazing in the grass.",
+                "SelectedPhrase": "brown and black horse",
+                "EditedPhrase": "brown and black dog",
+                "EditedRegionPhrase": "A brown and black dog",
+                "EditedCaption": "A brown and black dog are playing in the grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A brown and black horse is grazing in the grass.",
+                "SelectedPhrase": "brown and black horse",
+                "EditedPhrase": "brow and black sheep",
+                "EditedRegionPhrase": "A brown and black sheep",
+                "EditedCaption": "A brown and black sheep is grazing in the grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a person riding a dirt bike on a field of green grass.",
+                "SelectedPhrase": "dirt bike",
+                "EditedPhrase": "pink bicycle",
+                "EditedRegionPhrase": "A pink bicycle",
+                "EditedCaption": "a person riding a pink bicycle on a field of green grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a person riding a dirt bike on a field of green grass.",
+                "SelectedPhrase": "dirt bike",
+                "EditedPhrase": "scooter",
+                "EditedRegionPhrase": "A scooter",
+                "EditedCaption": "a person riding a scooter on a field of green grass.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a girl in a bink dress some people and a dog.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "toy car",
+                "EditedRegionPhrase": "A toy car",
+                "EditedCaption": "a girl in a bink dress some people and a toy car.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a girl in a pink dress, some people, and a dog.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "teddy bear",
+                "EditedRegionPhrase": "A teddy bear",
+                "EditedCaption": "a girl in a pink dress, some people, and a teddy bear.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A red delivery truck driving past a tall building.",
+                "SelectedPhrase": "red delivery truck",
+                "EditedPhrase": "blue sedan",
+                "EditedRegionPhrase": "A blue sedan",
+                "EditedCaption": "A blue sedan driving past a tall building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A red delivery truck driving past a tall building.",
+                "SelectedPhrase": "red delivery truck",
+                "EditedPhrase": "red sports car",
+                "EditedRegionPhrase": "A red sports car",
+                "EditedCaption": "A red sports car driving past a tall building.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "backpack",
+                "EditedRegionPhrase": "A backpack",
+                "EditedCaption": "a cat sitting on an L shaped desk with a monitor and water bottle on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "tablet",
+                "EditedRegionPhrase": "A tablet",
+                "EditedCaption": "a cat sitting on an L-shaped desk with a monitor and tablet on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "potted plant",
+                "EditedRegionPhrase": "A potted plant",
+                "EditedCaption": "a cat sitting on an L-shaped desk with a monitor and potted plant on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "headphone",
+                "EditedRegionPhrase": "A headphone",
+                "EditedCaption": "a cat sitting on an L-shaped desk with a monitor and headphone on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "laptop",
+                "EditedPhrase": "pen holder",
+                "EditedRegionPhrase": "A pen holder",
+                "EditedCaption": "a cat sitting on an L-shaped desk with a monitor and pen holder on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "dog",
+                "EditedRegionPhrase": "A dog",
+                "EditedCaption": "A dog sitting on an L-shaped desk with a monitor and laptop on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "rabbit",
+                "EditedRegionPhrase": "A rabbit",
+                "EditedCaption": "A rabbit sitting on an L-shaped desk with a monitor and laptop on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "bird",
+                "EditedRegionPhrase": "A bird",
+                "EditedCaption": "A bird sitting on an L-shaped desk with a monitor and laptop on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "hamster",
+                "EditedRegionPhrase": "A hamster",
+                "EditedCaption": "A hamster sitting on an L-shaped desk with a monitor and laptop on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L-shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "turtle",
+                "EditedRegionPhrase": "A turtle",
+                "EditedCaption": "A turtle sitting on an L-shaped desk with a monitor and laptop on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a cat sitting on an L shaped desk with a monitor and laptop on it.",
+                "SelectedPhrase": "cat",
+                "EditedPhrase": "pig",
+                "EditedRegionPhrase": "A pig",
+                "EditedCaption": "A pig sitting on an L shaped desk with a monitor and laptop on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man holding a frisbee in the dark on top of a field.",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "soccer ball",
+                "EditedRegionPhrase": "A man holding a soccer ball",
+                "EditedCaption": "A man holding a soccer ball in the dark on top of a field.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man holding a frisbee in the dark on top of a field.",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "basketball",
+                "EditedRegionPhrase": "A man holding a basketball",
+                "EditedCaption": "A man holding a basketball in the dark on top of a field.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man holding a frisbee in the dark on top of a field.",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "football",
+                "EditedRegionPhrase": "A man holding a football",
+                "EditedCaption": "A man holding a football in the dark on top of a field.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man holding a frisbee in the dark on top of a field.",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "baseball",
+                "EditedRegionPhrase": "A man holding a basebal",
+                "EditedCaption": "A man holding a baseball in the dark on top of a field.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man holding a frisbee in the dark on top of a field.",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "volleyball",
+                "EditedRegionPhrase": "A man holding a volleyball",
+                "EditedCaption": "A man holding a volleyball in the dark on top of a field.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man holding a frisbee in the dark on top of a field.",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "tennis ball",
+                "EditedRegionPhrase": "A man holding a tennis ball",
+                "EditedCaption": "A man holding a tennis ball in the dark on top of a field.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "The city bus is traveling down the road with its passengers.",
+                "SelectedPhrase": "city bus",
+                "EditedPhrase": "school bus",
+                "EditedRegionPhrase": "The school bus",
+                "EditedCaption": "The school bus is traveling down the road with its passengers.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "The city bus is traveling down the road with its passengers.",
+                "SelectedPhrase": "city bus",
+                "EditedPhrase": "tourist bus",
+                "EditedRegionPhrase": "The tourist bus",
+                "EditedCaption": "The tourist bus is traveling down the road with its passengers.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a pan pizza with pepperonis and a spatula.",
+                "SelectedPhrase": "pepperonis",
+                "EditedPhrase": "mushrooms",
+                "EditedRegionPhrase": "a pan pizza with mushrooms",
+                "EditedCaption": "a pan pizza with mushrooms and a spatula.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a pan pizza with pepperonis and a spatula.",
+                "SelectedPhrase": "pepperonis",
+                "EditedPhrase": "olives",
+                "EditedRegionPhrase": "a pan pizza with olives",
+                "EditedCaption": "a pan pizza with olives and a spatula.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "a pan pizza with pepperonis and a spatula.",
+                "SelectedPhrase": "pepperonis",
+                "EditedPhrase": "sausage",
+                "EditedRegionPhrase": "a pan pizza with sausage",
+                "EditedCaption": "a pan pizza with sausage and a spatula.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man on a horse walking in a festival.",
+                "SelectedPhrase": "horse",
+                "EditedPhrase": "elephant",
+                "EditedRegionPhrase": "A man on a elephant",
+                "EditedCaption": "A man on an elephant walking in a festival.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man on a horse walking in a festival.",
+                "SelectedPhrase": "horse",
+                "EditedPhrase": "donkey",
+                "EditedRegionPhrase": "A man on a donkey",
+                "EditedCaption": "A man on a donkey walking in a festival.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man on a horse walking in a festival.",
+                "SelectedPhrase": "horse",
+                "EditedPhrase": "ox",
+                "EditedRegionPhrase": "A man on an ox",
+                "EditedCaption": "A man on an ox walking in a festival.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man on a horse walking in a festival.",
+                "SelectedPhrase": "horse",
+                "EditedPhrase": "camel",
+                "EditedRegionPhrase": "A man on a camel",
+                "EditedCaption": "A man on a camel walking in a festival.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "macaw",
+                "EditedRegionPhrase": "A macaw",
+                "EditedCaption": "A macaw sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "toucan",
+                "EditedRegionPhrase": "A toucan",
+                "EditedCaption": "A toucan sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "penguin",
+                "EditedRegionPhrase": "A penguin",
+                "EditedCaption": "A penguin sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "flamingo",
+                "EditedRegionPhrase": "A flamingo",
+                "EditedCaption": "A flamingo sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "owl",
+                "EditedRegionPhrase": "An owl",
+                "EditedCaption": "An owl sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "peacock",
+                "EditedRegionPhrase": "A peacock",
+                "EditedCaption": "A peacock sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A parrot sitting on a hand while pecking at an open laptop computer.",
+                "SelectedPhrase": "parrot",
+                "EditedPhrase": "cockatoo",
+                "EditedRegionPhrase": "A cockatoo.",
+                "EditedCaption": "A cockatoo sitting on a hand while pecking at an open laptop computer.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A flower in a glass of water on a blanket.",
+                "SelectedPhrase": "glass of water",
+                "EditedPhrase": "jar",
+                "EditedRegionPhrase": "A flower in a jar",
+                "EditedCaption": "A flower in a jar on a blanket.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A flower in a glass of water on a blanket.",
+                "SelectedPhrase": "glass of water",
+                "EditedPhrase": "pitcher",
+                "EditedRegionPhrase": "A flower in a pitcher",
+                "EditedCaption": "A flower in a pitcher on a blanket.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A flower in a glass of water on a blanket.",
+                "SelectedPhrase": "glass of water",
+                "EditedPhrase": "goblet",
+                "EditedRegionPhrase": "A flower in a goblet",
+                "EditedCaption": "A flower in a goblet on a blanket.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A flower in a glass of water on a blanket.",
+                "SelectedPhrase": "glass of water",
+                "EditedPhrase": "urn",
+                "EditedRegionPhrase": "A flower in an urn",
+                "EditedCaption": "A flower in an urn on a blanket.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "The sink is surrounding the cat.",
+                "SelectedPhrase": "the cat",
+                "EditedPhrase": "the rabbit",
+                "EditedRegionPhrase": "The sink is surrounding the rabbit",
+                "EditedCaption": "The sink is surrounding the rabbit.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A fluffy orange cat is lounging on a steel railing.",
+                "SelectedPhrase": "fluffy orange cat",
+                "EditedPhrase": "fluffy orange dog",
+                "EditedRegionPhrase": "A fluffy orange dog",
+                "EditedCaption": "A fluffy orange dog is lounging on a steel railing.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A teenager is playing a shiny trumpet in a brick alley.",
+                "SelectedPhrase": "shiny trumpet",
+                "EditedPhrase": "shiny saxophone",
+                "EditedRegionPhrase": "A shiny saxophone",
+                "EditedCaption": "A teenager is playing a shiny saxophone in a brick alley.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A woman in a yellow dress is standing next to a blue car.",
+                "SelectedPhrase": "blue car",
+                "EditedPhrase": "blue bicycle",
+                "EditedRegionPhrase": "A blue bicycle",
+                "EditedCaption": "A woman in a yellow dress is standing next to a blue bicycle.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A man in a green shirt is holding a white umbrella.",
+                "SelectedPhrase": "white umbrella",
+                "EditedPhrase": "white rose",
+                "EditedRegionPhrase": "A white rose",
+                "EditedCaption": "A man in a green shirt is holding a white rose.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Three children are playing with a brown dog in the garden.",
+                "SelectedPhrase": "brown dog",
+                "EditedPhrase": "brown teddy bear",
+                "EditedRegionPhrase": "A brown teddy bear",
+                "EditedCaption": "Three children are playing with a brown teddy bear in the garden.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A boy is flying a red kite in the park.",
+                "SelectedPhrase": "red kite",
+                "EditedPhrase": "red frisbee",
+                "EditedRegionPhrase": "A red frisbee",
+                "EditedCaption": "A boy is throwing a red frisbee in the park.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dog is chasing a frisbee in a park.",
+                "SelectedPhrase": "dog",
+                "EditedPhrase": "cat",
+                "EditedRegionPhrase": "A cat is chasing",
+                "EditedCaption": "A cat is chasing a frisbee in a park.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A small child is making a sandcastle at the seaside.",
+                "SelectedPhrase": "small child",
+                "EditedPhrase": "mother",
+                "EditedRegionPhrase": "A mother",
+                "EditedCaption": "A mother is making a sandcastle at the seaside.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A hiker is standing at the peak of a mountain.",
+                "SelectedPhrase": "hiker",
+                "EditedPhrase": "police",
+                "EditedRegionPhrase": "A police",
+                "EditedCaption": "A police is standing at the peak of a mountain.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A street musician is playing the violin downtown.",
+                "SelectedPhrase": "violin",
+                "EditedPhrase": "harp",
+                "EditedRegionPhrase": "A street musician is playing the harp",
+                "EditedCaption": "A street musician is playing the harp downtown.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A fisherman is pulling a net out of the sea.",
+                "SelectedPhrase": "fisherman",
+                "EditedPhrase": "diver",
+                "EditedRegionPhrase": "A diver",
+                "EditedCaption": "A diver is pulling a net out of the sea.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A woman is practicing yoga in a tranquil garden.",
+                "SelectedPhrase": "woman",
+                "EditedPhrase": "man",
+                "EditedRegionPhrase": "A woman",
+                "EditedCaption": "A man is practicing yoga in a tranquil garden.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A cowboy is riding a horse in the desert.",
+                "SelectedPhrase": "cowboy",
+                "EditedPhrase": "girl",
+                "EditedRegionPhrase": "A girl riding a horse",
+                "EditedCaption": "A girl is riding a horse in the desert.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A firefighter is rescuing a kitten from a tall oak tree.",
+                "SelectedPhrase": "firefighter",
+                "EditedPhrase": "boy",
+                "EditedRegionPhrase": "A boy",
+                "EditedCaption": "A boy is rescuing a kitten from a tall oak tree.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A windowed living room with a couch and coffee table.",
+                "SelectedPhrase": "coffee table",
+                "EditedPhrase": "armchair",
+                "EditedRegionPhrase": "An armchair",
+                "EditedCaption": "A windowed living room with a couch and armchair.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A windowed living room with a couch and coffee table.",
+                "SelectedPhrase": "coffee table",
+                "EditedPhrase": "bookshelf",
+                "EditedRegionPhrase": "A bookshelf",
+                "EditedCaption": "A windowed living room with a couch and bookshelf.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A windowed living room with a couch and coffee table.",
+                "SelectedPhrase": "coffee table",
+                "EditedPhrase": "bicycle",
+                "EditedRegionPhrase": "A bicycle",
+                "EditedCaption": "A windowed living room with a couch and bicycle.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Signs posted on poles on a sidewalk next to a street.",
+                "SelectedPhrase": "signs",
+                "EditedPhrase": "advertisements",
+                "EditedRegionPhrase": "Advertisements posted on poles",
+                "EditedCaption": "Advertisements posted on poles on a sidewalk next to a street.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A female riding a bike down the street.",
+                "SelectedPhrase": "bike",
+                "EditedPhrase": "scooter",
+                "EditedRegionPhrase": "A scooter",
+                "EditedCaption": "A woman riding a scooter down the street.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bathroom with a sink and a toilet in it.",
+                "SelectedPhrase": "sink",
+                "EditedPhrase": "towel rack",
+                "EditedRegionPhrase": "A bathroom with a towel rack",
+                "EditedCaption": "A bathroom with a towel rack and a toilet in it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bathroom with a sink and a toilet in it.",
+                "SelectedPhrase": "sink",
+                "EditedPhrase": "shower",
+                "EditedRegionPhrase": "A shower",
+                "EditedCaption": "A bathroom with a shower and a toilet in it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bathroom with a sink and a toilet in it.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "urinal",
+                "EditedRegionPhrase": "A bathroom with a urinal",
+                "EditedCaption": "A bathroom with a sink and a urinal in it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A well-worn, dark brown teddy bear has seen better days.",
+                "SelectedPhrase": "teddy bear",
+                "EditedPhrase": "stuffed elephant",
+                "EditedRegionPhrase": "A well-worn, dark brown stuffed elephant",
+                "EditedCaption": "A well-worn, dark brown stuffed elephant has seen better days.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A well-worn, dark brown teddy bear has seen better days.",
+                "SelectedPhrase": "teddy bear",
+                "EditedPhrase": "stuffed monkey",
+                "EditedRegionPhrase": "A well-worn, dark brown stuffed monkey",
+                "EditedCaption": "A well-worn, dark brown stuffed monkey has seen better days.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A well-worn, dark brown teddy bear has seen better days.",
+                "SelectedPhrase": "teddy bear",
+                "EditedPhrase": "plushie",
+                "EditedRegionPhrase": "A well-worn, dark brown plushie",
+                "EditedCaption": "A well-worn, dark brown plushie has seen better days.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A dish of broccoli is sitting on a plate.",
+                "SelectedPhrase": "plate",
+                "EditedPhrase": "bowl",
+                "EditedRegionPhrase": "A dish of broccoli in a bowl",
+                "EditedCaption": "A dish of broccoli is sitting in a bowl.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bathroom with a toilet and tiled walls.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "bathtub",
+                "EditedRegionPhrase": "A bathroom with a bathtub",
+                "EditedCaption": "A bathroom with a bathtub and tiled walls.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A bathroom with a toilet and tiled walls.",
+                "SelectedPhrase": "toilet",
+                "EditedPhrase": "shower",
+                "EditedRegionPhrase": "A bathroom with a shower",
+                "EditedCaption": "A bathroom with a shower and tiled walls.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A pizza, a bowl of strawberries, and a tray of lettuce.",
+                "SelectedPhrase": "pizza",
+                "EditedPhrase": "sushi",
+                "EditedRegionPhrase": "A sushi",
+                "EditedCaption": "A sushi, a bowl of strawberries, and a tray of lettuce.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A pizza, a bowl of strawberries, and a tray of lettuce.",
+                "SelectedPhrase": "pizza",
+                "EditedPhrase": "plate of pasta",
+                "EditedRegionPhrase": "A plate of pasta",
+                "EditedCaption": "A plate of pasta, a bowl of strawberries, and a tray of lettuce.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A pizza, a bowl of strawberries, and a tray of lettuce.",
+                "SelectedPhrase": "bowl of strawberries",
+                "EditedPhrase": "bowl of apples",
+                "EditedRegionPhrase": "A bowl of apples",
+                "EditedCaption": "A pizza, a bowl of apples, and a tray of lettuce.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A pizza, a bowl of strawberries, and a tray of lettuce.",
+                "SelectedPhrase": "tray of lettuce",
+                "EditedPhrase": "tray of spinach",
+                "EditedRegionPhrase": "A tray of spinach",
+                "EditedCaption": "A pizza, a bowl of strawberries, and a tray of spinach.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Long loaf of bread next to two containers of vegetables.",
+                "SelectedPhrase": "long loaf of bread",
+                "EditedPhrase": "baguette",
+                "EditedRegionPhrase": "A baguette",
+                "EditedCaption": "Baguette next to two containers of vegetables.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Long loaf of bread next to two containers of vegetables.",
+                "SelectedPhrase": "long loaf of bread",
+                "EditedPhrase": "croissant",
+                "EditedRegionPhrase": "A croissant",
+                "EditedCaption": "Croissant next to two containers of vegetables.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Long loaf of bread next to two containers of vegetables.",
+                "SelectedPhrase": "containers of vegetables",
+                "EditedPhrase": "bowls of fruits",
+                "EditedRegionPhrase": "Bowls of fruits",
+                "EditedCaption": "Long loaf of bread next to two bowls of fruits.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A living room area with a pull out couch and table with a remote control on it.",
+                "SelectedPhrase": "remote control",
+                "EditedPhrase": "smartphone",
+                "EditedRegionPhrase": "A smartphone on a table",
+                "EditedCaption": "A living room area with a pull out couch and table with a smartphone on it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A stuffed cow sits on a patchwork quilt.",
+                "SelectedPhrase": "stuffed cow",
+                "EditedPhrase": "toy horse",
+                "EditedRegionPhrase": "A toy horse",
+                "EditedCaption": "A toy horse sits on a patchwork quilt.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A stuffed cow sits on a patchwork quilt.",
+                "SelectedPhrase": "stuffed cow",
+                "EditedPhrase": "plush dog",
+                "EditedRegionPhrase": "A plush dog",
+                "EditedCaption": "A plush dog sits on a patchwork quilt.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A stuffed cow sits on a patchwork quilt.",
+                "SelectedPhrase": "stuffed cow",
+                "EditedPhrase": "teddy bear",
+                "EditedRegionPhrase": "A teddy bear",
+                "EditedCaption": "A teddy bear sits on a patchwork quilt.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A person standing with a backpack and a pair of skis on top of a slope.",
+                "SelectedPhrase": "pair of skis",
+                "EditedPhrase": "snowboard",
+                "EditedRegionPhrase": "A snowboard on top of a slope",
+                "EditedCaption": "A person standing with a backpack and a snowboard on top of a slope.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A historic stone building with clocks on both sides.",
+                "SelectedPhrase": "historic stone building",
+                "EditedPhrase": "modern glass skyscraper",
+                "EditedRegionPhrase": "A modern glass skyscraper",
+                "EditedCaption": "A modern glass skyscraper with clocks on both sides.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A pizza pie that has a dollop of sour cream.",
+                "SelectedPhrase": "sour cream",
+                "EditedPhrase": "marinara sauce",
+                "EditedRegionPhrase": "A dollop of marinara sauce",
+                "EditedCaption": "A pizza pie that has a dollop of marinara sauce.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A pizza pie that has a dollop of sour cream.",
+                "SelectedPhrase": "dollop of sour cream",
+                "EditedPhrase": "slice of avocado",
+                "EditedRegionPhrase": "A slice of avocado",
+                "EditedCaption": "A pizza pie that has a slice of avocado.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A road lined with giant white vases surround a flower garden.",
+                "SelectedPhrase": "vases",
+                "EditedPhrase": "statues",
+                "EditedRegionPhrase": "A road lined with giant white statues",
+                "EditedCaption": "A road lined with giant white statues surround a flower garden.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A road lined with giant white vases surround a flower garden.",
+                "SelectedPhrase": "vases",
+                "EditedPhrase": "pillars",
+                "EditedRegionPhrase": "Giant white pillars",
+                "EditedCaption": "A road lined with giant white pillars surround a flower garden.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A road lined with giant white vases surround a flower garden.",
+                "SelectedPhrase": "vases",
+                "EditedPhrase": "lanterns",
+                "EditedRegionPhrase": "Giant white lanterns",
+                "EditedCaption": "A road lined with giant white lanterns surround a flower garden.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "potted plant",
+                "EditedRegionPhrase": "A potted plant",
+                "EditedCaption": "A tall thin refrigerator and a potted plant.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "tissue box",
+                "EditedRegionPhrase": "A tissue box",
+                "EditedCaption": "A tall thin refrigerator and a tissue box.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "laundry basket",
+                "EditedRegionPhrase": "A laundry basket",
+                "EditedCaption": "A tall thin refrigerator and a laundry basket.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "vacuum cleaner",
+                "EditedRegionPhrase": "A vacuum cleaner",
+                "EditedCaption": "A tall thin refrigerator and a vacuum cleaner.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "broom",
+                "EditedRegionPhrase": "A broom",
+                "EditedCaption": "A tall thin refrigerator and a broom.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "mop",
+                "EditedRegionPhrase": "A mop",
+                "EditedCaption": "A tall thin refrigerator and a mop.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "trash can",
+                "EditedPhrase": "stool",
+                "EditedRegionPhrase": "A stool",
+                "EditedCaption": "A tall thin refrigerator and a stool.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "refrigerator",
+                "EditedPhrase": "bookshelf",
+                "EditedRegionPhrase": "A tall thin bookshelf",
+                "EditedCaption": "A tall thin bookshelf and a trash can.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "refrigerator",
+                "EditedPhrase": "wine rack",
+                "EditedRegionPhrase": "A tall thin wine rack",
+                "EditedCaption": "A tall thin wine rack and a trash can.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "A tall thin refrigerator and a trash can.",
+                "SelectedPhrase": "refrigerator",
+                "EditedPhrase": "coat rack",
+                "EditedRegionPhrase": "A tall thin coat rack",
+                "EditedCaption": "A tall thin coat rack and a trash can.",
+                "Category": "object"
+            }
+        ],
+        "attribute": [
+            {
+                "InputCaption": "A pottery vase filled with flowers and leaves.",
+                "SelectedPhrase": "pottery vase",
+                "EditedPhrase": "glass vase",
+                "EditedRegionPhrase": "A glass vase",
+                "EditedCaption": "A glass vase filled with flowers and leaves.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A pottery vase filled with flowers and leaves.",
+                "SelectedPhrase": "pottery vase",
+                "EditedPhrase": "ceramic vase",
+                "EditedRegionPhrase": "A ceramic vase",
+                "EditedCaption": "A ceramic vase filled with flowers and leaves.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A pottery vase filled with flowers and leaves.",
+                "SelectedPhrase": "pottery vase",
+                "EditedPhrase": "metal vase",
+                "EditedRegionPhrase": "A metal vase",
+                "EditedCaption": "A metal vase filled with flowers and leaves.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A road lined with giant white vases surround a flower garden.",
+                "SelectedPhrase": "white vases",
+                "EditedPhrase": "red vases",
+                "EditedRegionPhrase": "Giant red vases",
+                "EditedCaption": "A road lined with giant red vases surround a flower garden.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A road lined with giant white vases surround a flower garden.",
+                "SelectedPhrase": "white vases",
+                "EditedPhrase": "green vases",
+                "EditedRegionPhrase": "Giant green vases",
+                "EditedCaption": "A road lined with giant green vases surround a flower garden.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A road lined with giant white vases surround a flower garden.",
+                "SelectedPhrase": "white vases",
+                "EditedPhrase": "yellow vases",
+                "EditedRegionPhrase": "A road lined with giant yellow vases",
+                "EditedCaption": "A road lined with giant yellow vases surround a flower garden.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "The person is holding a baked good with bites taken from it.",
+                "SelectedPhrase": "baked good with bites taken from it",
+                "EditedPhrase": "baked good still wrapped",
+                "EditedRegionPhrase": "A baked good still wrapped",
+                "EditedCaption": "The person is holding a baked good still wrapped.",
+                "Category": "attribute(condition)"
+            },
+            {
+                "InputCaption": "A large white cake sitting on top of a cake plate.",
+                "SelectedPhrase": "large white cake",
+                "EditedPhrase": "large chocolate cake",
+                "EditedRegionPhrase": "A large chocolate cake",
+                "EditedCaption": "A large chocolate cake sitting on top of a cake plate.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A large white cake sitting on top of a cake plate.",
+                "SelectedPhrase": "white cake",
+                "EditedPhrase": "red velvet cake",
+                "EditedRegionPhrase": "A red velvet cake",
+                "EditedCaption": "A red velvet cake sitting on top of a cake plate.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A large white cake sitting on top of a cake plate.",
+                "SelectedPhrase": "white cake",
+                "EditedPhrase": "lemon cake",
+                "EditedRegionPhrase": "A lemon cake",
+                "EditedCaption": "A lemon cake sitting on top of a cake plate.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A large white cake sitting on top of a cake plate.",
+                "SelectedPhrase": "white cake",
+                "EditedPhrase": "rainbow cake",
+                "EditedRegionPhrase": "A rainbow cake",
+                "EditedCaption": "A rainbow cake sitting on top of a cake plate.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A group of white toilets in a room.",
+                "SelectedPhrase": "white toilets",
+                "EditedPhrase": "blue toilets",
+                "EditedRegionPhrase": "A group of blue toilets",
+                "EditedCaption": "A group of blue toilets in a room.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A group of white toilets in a room.",
+                "SelectedPhrase": "white toilets",
+                "EditedPhrase": "black toilets",
+                "EditedRegionPhrase": "A group of black toilets",
+                "EditedCaption": "A group of black toilets in a room.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A group of white toilets in a room.",
+                "SelectedPhrase": "white toilets",
+                "EditedPhrase": "red toilets",
+                "EditedRegionPhrase": "A group of red toilets",
+                "EditedCaption": "A group of red toilets in a room.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A group of white toilets in a room.",
+                "SelectedPhrase": "white toilets",
+                "EditedPhrase": "green toilets",
+                "EditedRegionPhrase": "A group of green toilets",
+                "EditedCaption": "A group of green toilets in a room.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A bathroom with a toilet and tiled walls.",
+                "SelectedPhrase": "tiled walls",
+                "EditedPhrase": "mosaic walls",
+                "EditedRegionPhrase": "A bathroom with mosaic walls",
+                "EditedCaption": "A bathroom with a toilet and mosaic walls.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "A bathroom with a toilet and tiled walls.",
+                "SelectedPhrase": "tiled walls",
+                "EditedPhrase": "wallpapered walls",
+                "EditedRegionPhrase": "Wallpapered walls",
+                "EditedCaption": "A bathroom with a toilet and wallpapered walls.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "A bathroom with a toilet and tiled walls.",
+                "SelectedPhrase": "tiled walls",
+                "EditedPhrase": "painted walls",
+                "EditedRegionPhrase": "Painted walls",
+                "EditedCaption": "A bathroom with a toilet and painted walls.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "A bathroom with a toilet and tiled walls.",
+                "SelectedPhrase": "tiled walls",
+                "EditedPhrase": "plain walls",
+                "EditedRegionPhrase": "Plain walls",
+                "EditedCaption": "A bathroom with a toilet and plain walls.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "A well-worn, dark brown teddy bear has seen better days.",
+                "SelectedPhrase": "well-worn",
+                "EditedPhrase": "brand new",
+                "EditedRegionPhrase": "A brand new, dark brown teddy bear",
+                "EditedCaption": "A brand new, dark brown teddy bear has seen better days.",
+                "Category": "attribute(condition)"
+            },
+            {
+                "InputCaption": "A wood cutting board on a counter with utensils and a knife laying on the board, next to a cut lemon.",
+                "SelectedPhrase": "wood cutting board",
+                "EditedPhrase": "plastic cutting board",
+                "EditedRegionPhrase": "A plastic cutting board",
+                "EditedCaption": "A plastic cutting board on a counter with utensils and a knife laying on the board, next to a cut lemon.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "An evil clown sitting on a park bench in winter.",
+                "SelectedPhrase": "evil clown",
+                "EditedPhrase": "happy clown",
+                "EditedRegionPhrase": "A happy clown",
+                "EditedCaption": "A happy clown sitting on a park bench in winter.",
+                "Category": "attribute(appearance)"
+            },
+            {
+                "InputCaption": "Clay pot leading against a pole on a sandy beach.",
+                "SelectedPhrase": "clay pot",
+                "EditedPhrase": "Terracotta pot",
+                "EditedRegionPhrase": "A Terracotta pot",
+                "EditedCaption": "Terracotta pot leading against a pole on a sandy beach.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "Clay pot leading against a pole on a sandy beach.",
+                "SelectedPhrase": "clay pot",
+                "EditedPhrase": "ceramic pot",
+                "EditedRegionPhrase": "A ceramic pot",
+                "EditedCaption": "Ceramic pot leading against a pole on a sandy beach.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "Clay pot leading against a pole on a sandy beach.",
+                "SelectedPhrase": "clay pot",
+                "EditedPhrase": "glazed pot",
+                "EditedRegionPhrase": "A glazed pot",
+                "EditedCaption": "Glazed pot leading against a pole on a sandy beach.",
+                "Category": "attribute(appearance)"
+            },
+            {
+                "InputCaption": "The wicker basket has various fruits in it.",
+                "SelectedPhrase": "wicker basket",
+                "EditedPhrase": "metal basket",
+                "EditedRegionPhrase": "The metal basket",
+                "EditedCaption": "The metal basket has various fruits in it.",
+                "Category": "object"
+            },
+            {
+                "InputCaption": "The wicker basket has various fruits in it.",
+                "SelectedPhrase": "wicker basket",
+                "EditedPhrase": "plastic basket",
+                "EditedRegionPhrase": "The plastic basket",
+                "EditedCaption": "The plastic basket has various fruits in it.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A few porcelain plates with birds hand-painted on them.",
+                "SelectedPhrase": "porcelain plates",
+                "EditedPhrase": "ceramic plates",
+                "EditedRegionPhrase": "A few ceramic plates",
+                "EditedCaption": "A few ceramic plates with birds hand-painted on them.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A few porcelain plates with birds Hand-painted on them.",
+                "SelectedPhrase": "porcelain plates",
+                "EditedPhrase": "wooden plates",
+                "EditedRegionPhrase": "A few wooden plates",
+                "EditedCaption": "A few wooden plates with birds Hand-painted on them.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A girl with a hat shape like a cats head and an umbrella.",
+                "SelectedPhrase": "hat shape like a cats head",
+                "EditedPhrase": "shape like a birthday cake",
+                "EditedRegionPhrase": "A hat shape like a birthday cake",
+                "EditedCaption": "A girl with a shape like a birthday cake and an umbrella.",
+                "Category": "attribute(shape)"
+            },
+            {
+                "InputCaption": "A well groomed garden with a fountain in front of a brick home.",
+                "SelectedPhrase": "brick home",
+                "EditedPhrase": "wooden home",
+                "EditedRegionPhrase": "A wooden home",
+                "EditedCaption": "A well groomed garden with a fountain in front of a wooden home.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A woman standing underneath a red umbrella in the rain.",
+                "SelectedPhrase": "red umbrella",
+                "EditedPhrase": "transparent umbrella",
+                "EditedRegionPhrase" : "A transparent umbrella",
+                "EditedCaption": "A woman standing underneath a transparent umbrella in the rain.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A plate of food sits on a wooden table.",
+                "SelectedPhrase": "wooden table",
+                "EditedPhrase": "marble table",
+                "EditedRegionPhrase": "A marble table",
+                "EditedCaption": "A plate of food sits on a marble table.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A pile of fruit sits atop a dessert in a square white bowl.",
+                "SelectedPhrase": "square white bowl",
+                "EditedPhrase": "round white bowl",
+                "EditedRegionPhrase": "A round white bowl",
+                "EditedCaption": "A pile of fruit sits atop a dessert in a round white bowl.",
+                "Category": "attribute(shape)"
+            },
+            {
+                "InputCaption": "a busted up boat sitting in the middle of some grass.",
+                "SelectedPhrase": "busted up",
+                "EditedPhrase": "brand new",
+                "EditedRegionPhrase": "A brand new boat",
+                "EditedCaption": "a brand new boat sitting in the middle of some grass.",
+                "Category": "attribute(condition)"
+            },
+            {
+                "InputCaption": "An orange tabby cat stands on a basket on a bike's handlebars.",
+                "SelectedPhrase": "orange tabby cat",
+                "EditedPhrase": "white cat",
+                "EditedRegionPhrase": "A white cat",
+                "EditedCaption": "A white cat stands on a basket on a bike's handlebars.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "Man wearing a grey and white suit models for the camera.",
+                "SelectedPhrase": "grey and white suit",
+                "EditedPhrase": "striped suit",
+                "EditedRegionPhrase": "Men wearing a striped suit",
+                "EditedCaption": "Man wearing a striped suit models for the camera.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "The mascot with a blue cap at the baseball game is on the field.",
+                "SelectedPhrase": "blue cap",
+                "EditedPhrase": "red cap",
+                "EditedRegionPhrase": "The mascot with a red cap",
+                "EditedCaption": "The mascot with a red cap at the baseball game is on the field.",
+                "Category": "attribute(addition)"
+            },
+            {
+                "InputCaption": "An army green truck is next to a red bus.",
+                "SelectedPhrase": "army green",
+                "EditedPhrase": "purple",
+                "EditedRegionPhrase": "A purple truck",
+                "EditedCaption": "A purple truck is next to a red bus.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A stuffed animal teddy bear that is orange in color, outside on a sunny day in a grass yard area.",
+                "SelectedPhrase": "orange in color",
+                "EditedPhrase": "red in color",
+                "EditedRegionPhrase": "A red in color stuffed animal teddy bear",
+                "EditedCaption": "A stuffed animal teddy bear that is red in color, outside on a sunny day in a grass yard area.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "black cats sleeping on a big bed in a shady room.",
+                "SelectedPhrase": "black cats",
+                "EditedPhrase": "brown cats",
+                "EditedRegionPhrase": "brown cats sleeping on a big bed",
+                "EditedCaption": "brown cats sleeping on a big bed in a shady room.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "a pink hat and a cellphone on some weaved basket.",
+                "SelectedPhrase": "pink hat",
+                "EditedPhrase": "yellow hat",
+                "EditedRegionPhrase": "a yellow hat on some weaved basket",
+                "EditedCaption": "a yellow hat and a cellphone on some weaved basket.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "Two brown cows next to each other in a barn.",
+                "SelectedPhrase": "brown cows",
+                "EditedPhrase": "white cows",
+                "EditedRegionPhrase": "Two white cows next to each other",
+                "EditedCaption": "Two white cows next to each other in a barn.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A piece of cake with white icing on a plate.",
+                "SelectedPhrase": "white icing",
+                "EditedPhrase": "chocolate icing",
+                "EditedRegionPhrase": "A piece of cake with chocolate icing",
+                "EditedCaption": "A piece of cake with chocolate icing on a plate.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A plate filled with some pasta and broccoli.",
+                "SelectedPhrase": "plate filled with",
+                "EditedPhrase": "plate empty",
+                "EditedRegionPhrase": "A plate empty",
+                "EditedCaption": "A plate empty of pasta and broccoli.",
+                "Category": "attribute(state)"
+            },
+            {
+                "InputCaption": "A cup half filled with water.",
+                "SelectedPhrase": "half filled",
+                "EditedPhrase": "completely filled",
+                "EditedRegionPhrase": "A cup completely filled",
+                "EditedCaption": "A cup completely filled with water.",
+                "Category": "attribute(state)"
+            },
+            {
+                "InputCaption": "A chef is chopping vegetables on a wooden table.",
+                "SelectedPhrase": "wooden table",
+                "EditedPhrase": "marble table",
+                "EditedRegionPhrase": "A marble table",
+                "EditedCaption": "A chef is chopping vegetables on a wooden counter.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A man is fishing on a rocky pier with a wooden rod.",
+                "SelectedPhrase": "wooden rod",
+                "EditedPhrase": "carbon fiber rod",
+                "EditedRegionPhrase": "A carbon fiber rod",
+                "EditedCaption": "A man is fishing on a rocky pier with a carbon fiber rod.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "A group is having a picnic on a long rectangular mat.",
+                "SelectedPhrase": "rectangular mat",
+                "EditedPhrase": "round mat",
+                "EditedRegionPhrase": "A round patterned mat",
+                "EditedCaption": "A group is having a picnic on a round patterned mat.",
+                "Category": "attribute(shape)"
+            },
+            {
+                "InputCaption": "A girl in a velvet jacket is sitting under a plastic umbrella.",
+                "SelectedPhrase": "velvet jacket",
+                "EditedPhrase": "denim jacket",
+                "EditedRegionPhrase": "A denim jacket",
+                "EditedCaption": "A girl in a denim jacket is sitting under a plastic umbrella.",
+                "Category": "attribute(material)"
+            },
+            {
+                "InputCaption": "An elderly man is feeding pigeons in the square.",
+                "SelectedPhrase": "elderly man",
+                "EditedPhrase": "young man",
+                "EditedRegionPhrase" : "A young man",
+                "EditedCaption": "A young man is feeding pigeons in the square.",
+                "Category": "attribute(condition)"
+            },
+            {
+                "InputCaption": "A girl wearing a polka dot dress is blowing bubbles on a windy afternoon.",
+                "SelectedPhrase": "polka dot dress",
+                "EditedPhrase": "a checkered dress",
+                "EditedRegionPhrase": "A checkered dress",
+                "EditedCaption": "A girl with a checkered dress is blowing bubbles on a windy afternoon.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "Two cyclists with reflective jackets are traversing a bridge at sunset.",
+                "SelectedPhrase": "cyclists with reflective jackets",
+                "EditedPhrase": "cyclists with gray jackets",
+                "EditedRegionPhrase": "Two cyclists with gray jackets",
+                "EditedCaption": "Two cyclists with gray jackets are traversing a bridge at sunset.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "A group of kids in school uniforms are eagerly watching a puppet show in the park.",
+                "SelectedPhrase": "kids in school uniforms",
+                "EditedPhrase": "kids in casual dress",
+                "EditedRegionPhrase": "A group of kids in casual dress",
+                "EditedCaption": "A group of kids in casual dress are eagerly watching a puppet show in the park.",
+                "Category": "attribute(pattern)"
+            },
+    
+            {
+                "InputCaption": "A chef in a white apron is preparing sushi in a modern kitchen with hanging pots.",
+                "SelectedPhrase": "chef in a white apron",
+                "EditedPhrase": "chef in a floral apron",
+                "EditedRegionPhrase": "A chef in a floral apron",
+                "EditedCaption": "A chef in a floral apron is preparing sushi in a modern kitchen with hanging pots.",
+                "Category": "attribute(pattern)"
+            },
+            {
+                "InputCaption": "A surfer with a blue wetsuit is riding a large wave with dolphins in the background.",
+                "SelectedPhrase": "surfer with a blue wetsuit",
+                "EditedPhrase": "surfer with an orange wetsuit",
+                "EditedRegionPhrase": "A surfer with an orange wetsuit",
+                "EditedCaption": "A surfer with an orange wetsuit is riding a large wave with dolphins in the background.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A teenager is playing a shiny trumpet in a brick alley.",
+                "SelectedPhrase": "shiny trumpet",
+                "EditedPhrase": "rusty trumpet",
+                "EditedRegionPhrase": "A teenager is playing a rusty trumpet",
+                "EditedCaption": "A teenager is playing a rusty trumpet in a brick alley.",
+                "Category": "attribute(condition)"
+            },
+            {
+                "InputCaption": "A girl in a red dress is holding a pink balloon.",
+                "SelectedPhrase": "red dress",
+                "EditedPhrase": "blue dress",
+                "EditedRegionPhrase": "A girl in a blue dress",
+                "EditedCaption": "A girl in a blue dress is holding a pink balloon.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A black car is parked next to a white wall.",
+                "SelectedPhrase": "black car",
+                "EditedPhrase": "yellow car",
+                "EditedRegionPhrase": "A yellow car",
+                "EditedCaption": "A yellow car is parked next to a white wall.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "Two dead birds head to head on a white street marker.",
+                "SelectedPhrase": "dead birds",
+                "EditedPhrase": "alive birds",
+                "EditedRegionPhrase": "Two alive birds head to head",
+                "EditedCaption": "Two alive birds head to head on a white street marker.",
+                "Category": "attribute(condition)"
+            },
+            {
+                "InputCaption": "A blonde woman is cuddling a small stuffed animal.",
+                "SelectedPhrase": "blonde woman",
+                "EditedPhrase": "brunette woman",
+                "EditedRegionPhrase": "A brunette woman",
+                "EditedCaption": "A brunette woman is cuddling a small stuffed animal.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A blonde woman is cuddling a small stuffed animal.",
+                "SelectedPhrase": "blonde woman",
+                "EditedPhrase": "black-haired woman",
+                "EditedRegionPhrase": "A black-haired woman",
+                "EditedCaption": "A black-haired woman is cuddling a small stuffed animal.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A blonde woman is cuddling a small stuffed animal.",
+                "SelectedPhrase": "blonde woman",
+                "EditedPhrase": "redhead woman",
+                "EditedRegionPhrase" : "A redhead woman",
+                "EditedCaption": "A redhead woman is cuddling a small stuffed animal.",
+                "Category": "attribute(color)"
+            },
+            {
+                "InputCaption": "A blonde woman is cuddling a small stuffed animal.",
+                "SelectedPhrase": "blonde woman",
+                "EditedPhrase": "gray-haired woman",
+                "EditedRegionPhrase": "A gray-haired woman",
+                "EditedCaption": "A gray-haired woman is cuddling a small stuffed animal.",
+                "Category": "attribute(color)"
+            }
+        ],
+        "action": [
+            {
+                "InputCaption": "A group of kids in school uniforms are eagerly watching a puppet show in the park.",
+                "SelectedPhrase": "puppet show",
+                "EditedPhrase": "puppet show with clowns",
+                "EditedCaption": "A group of kids in school uniforms are eagerly watching a puppet show with clowns in the park.",
+                "Category": "action(entertainment)"
+            },
+            {
+                "InputCaption": "A couple is dancing in the rain",
+                "SelectedPhrase": "dancing",
+                "EditedPhrase": "twirling",
+                "EditedCaption": "A couple is twirling in the rain",
+                "Category": "action(movement)"
+            },
+            {
+                "InputCaption": "Two birds are perched on a branch, one looking at the other",
+                "SelectedPhrase": "perched on",
+                "EditedPhrase": "flying around",
+                "EditedCaption": "Two birds are flying around a branch, one looking at the other",
+                "Category": "action(movement)"
+            },
+            {
+                "InputCaption": "A group of tourists are taking photos of a monument",
+                "SelectedPhrase": "taking photos",
+                "EditedPhrase": "pointing at",
+                "EditedCaption": "A group of tourists are pointing at a monument",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "A dog is fetching a stick thrown by its owner",
+                "SelectedPhrase": "fetching",
+                "EditedPhrase": "chasing",
+                "EditedCaption": "A dog is chasing a stick thrown by its owner",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "A child is pushing another child on a swing",
+                "SelectedPhrase": "pushing",
+                "EditedPhrase": "watching",
+                "EditedCaption": "A child is watching another child on a swing",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "A girl wearing a polka dot dress is blowing bubbles on a windy afternoon",
+                "SelectedPhrase": "blowing bubbles",
+                "EditedPhrase": "catching bubbles",
+                "EditedCaption": "A girl wearing a polka dot dress is catching bubbles on a windy afternoon",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "Two cyclists with reflective jackets are traversing a bridge at sunset",
+                "SelectedPhrase": "traversing a bridge",
+                "EditedPhrase": "pausing on a bridge",
+                "EditedCaption": "Two cyclists with reflective jackets are pausing on a bridge at sunset",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "A chef in a white apron is preparing sushi in a modern kitchen with hanging pots",
+                "SelectedPhrase": "preparing sushi",
+                "EditedPhrase": "slicing vegetables",
+                "EditedCaption": "A chef in a white apron is slicing vegetables in a modern kitchen with hanging pots",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "A man is reading a book under a tree",
+                "SelectedPhrase": "reading",
+                "EditedPhrase": "flipping pages",
+                "EditedCaption": "A man is flipping pages of a book",
+                "Category": "action(activity)"
+            },
+            {
+                "InputCaption": "The man holds a ping pong paddle under the shelf on a wall",
+                "SelectedPhrase": "holding",
+                "EditedPhrase": "examining",
+                "EditedCaption": "The man is examining a ping pong paddle on a shelf on the wall",
+                "Category": "action(movement)"
+            },
+            {
+                "InputCaption": "A man with a hat standing beneath a street light",
+                "SelectedPhrase": "standing",
+                "EditedPhrase": "leaning",
+                "EditedCaption": "A man with a hat leaning beneath a street light",
+                "Category": "action(movement)"
+            }
+        ],
+        "count": [
+            {
+                "InputCaption": "A chicken is sitting on a chair",
+                "SelectedPhrase": "chicken",
+                "EditedPhrase": "no chicken",
+                "EditedCaption": "No chicken is sitting on a chair",
+                "Category": "delete(object)"
+            },
+            {
+                "InputCaption": "an elephant in a field of tall grass with trees in the background",
+                "SelectedPhrase": "elephant",
+                "EditedPhrase": "no elephant",
+                "EditedCaption": "No elephant in a field of tall grass with trees in the background",
+                "Category": "delete(object)"
+            },
+            {
+                "InputCaption": "A woman in a purple shirt throwing a frisbee",
+                "SelectedPhrase": "frisbee",
+                "EditedPhrase": "no frisbee",
+                "EditedCaption": "A woman in a purple shirt",
+                "Category": "delete(object)"
+            },
+            {
+                "InputCaption": "There are three apples on the plate",
+                "SelectedPhrase": "three apples",
+                "EditedPhrase": "five apples",
+                "EditedCaption": "There are five apples on the plate",
+                "Category": "count(five)"
+            },
+            {
+                "InputCaption": "The mother duck is swimming with two ducklings",
+                "SelectedPhrase": "two ducklings",
+                "EditedPhrase": "four ducklings",
+                "EditedCaption": "The mother duck is swimming with four ducklings",
+                "Category": "count(four)"
+            },
+            {
+                "InputCaption": "The artist painted seven stars in the night sky",
+                "SelectedPhrase": "painted seven stars",
+                "EditedPhrase": "painted ten stars",
+                "EditedCaption": "The artist painted ten stars in the night sky",
+                "Category": "count(ten"
+            },
+            {
+                "InputCaption": "The baker placed four muffins in the display case",
+                "SelectedPhrase": "four muffins",
+                "EditedPhrase": "six muffins",
+                "EditedCaption": "The baker placed six muffins in the display case",
+                "Category": "count(six)"
+            },
+            {
+                "InputCaption": "The child has two balloons in his hand",
+                "SelectedPhrase": "two balloons",
+                "EditedPhrase": "three balloons",
+                "EditedCaption": "The child has three balloons in his hand",
+                "Category": "count(three)"
+            },
+            {
+                "InputCaption": "The florist arranged a bouquet with eight roses",
+                "SelectedPhrase": "eight roses",
+                "EditedPhrase": "four roses",
+                "EditedCaption": "The florist arranged a bouquet with four roses",
+                "Category": "count(flowers)"
+            },
+            {
+                "InputCaption": "The teacher distributed five books to the students",
+                "SelectedPhrase": "five books",
+                "EditedPhrase": "seven books",
+                "EditedCaption": "The teacher distributed seven books to the students",
+                "Category": "count(seven)"
+            },
+            {
+                "InputCaption": "The farmer harvested six pumpkins from the field",
+                "SelectedPhrase": "six pumpkins",
+                "EditedPhrase": "nine pumpkins",
+                "EditedCaption": "The farmer harvested nine pumpkins from the field",
+                "Category": "count(nine)"
+            },
+            {
+                "InputCaption": "The jeweler showcased a set of three rings",
+                "SelectedPhrase": "set of three rings",
+                "EditedPhrase": "set of four rings",
+                "EditedCaption": "The jeweler showcased a set of four rings",
+                "Category": "count(four)"
+            },
+            {
+                "InputCaption": "The photographer took pictures of four models",
+                "SelectedPhrase": "four models",
+                "EditedPhrase": "five models",
+                "EditedCaption": "The photographer took pictures of five models",
+                "Category": "count(five)"
+            }
+        ]
+    }
+}

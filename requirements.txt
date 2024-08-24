@@ -1,0 +1,25 @@
+transformers==4.24.0
+diffusers==0.7.0
+huggingface-hub==0.10.1
+kornia==0.5.0
+albumentations==0.5.2
+absl-py==1.4.0
+accelerate @ git+https://github.com/huggingface/accelerate@c7e5e41b8c5c3378921f6f5241326abf8cd7d283
+autoawq @ https://github.com/casper-hansen/AutoAWQ/releases/download/v0.2.4/autoawq-0.2.4+cu118-cp38-cp38-linux_x86_64.whl#sha256=c410bfc882bbdd59e2d6f232cc469d8ad55d718e0513dfc40734690ce9593d5b
+diffusers==0.30.0
+flair==0.12.2
+fastapi==0.98.0
+gradio==4.16.0
+huggingface-hub==0.24.5
+img2dataset==1.41.0
+matplotlib==3.7.1
+numpy==1.24.2
+pandas==1.5.3
+ray==2.9.2
+scikit-learn==1.2.2
+torch==2.1.2+cu118
+transformers @ git+https://github.com/huggingface/transformers@5fabebdb7d4f9ee5a6459f7c0dcde0b1901f6205
+uvicorn==0.22.0
+wandb==0.17.0
+xformers==0.0.23.post1+cu118
+

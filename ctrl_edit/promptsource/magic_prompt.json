@@ -1,0 +1,58 @@
+{
+    "prompt_name": "prompt_enhancement",
+    "meta_description": "This prompt template is designed to refine and enhance source phrase by incorporating provided edited phrases and tags.",
+    "io_structure": {
+        "input_keys": [
+            "Phrase",
+            "Full caption"
+        ],
+        "output_keys": [
+            "Enhanced phrase"
+        ]
+    },
+    "task_instruction": "As an AI language model your task is to refine and expand upon a given phrase from an image-captioning dataset, making it more specific, detailed, and context-rich. You will generate a list of enhanced phrases based on the provided input phrase and caption. These enhancements should accurately describe the features of the given phrase, adding descriptive elements that offer a clearer and more detailed visualization of the subject, object, attributes, or actions depicted in the image. Your modifications should be accurate, relevant, and visually conceivable, enriching the original phrase without changing its fundamental meaning. Focus on creating visually plausible and contextually suitable enhancements that add depth and clarity to the image region description.",
+    "samples": {
+        "object": [
+            "{\"Phrase\": \"dog\", \"Full caption\": \"A dog is playing in the park.\", \"Enhanced phrase\": [\"Golden retriever\", \"Dog with a wagging tail\", \"Canine with a shiny coat\"]}",
+            "{\"Phrase\": \"trolleybus\", \"Full caption\": \"A trolleybus is on a city street\", \"Enhanced phrase\": [\"Electric trolleybus\", \"Public transportation vehicle\", \"City street trolleybus\", \"Trolleybus with overhead wires\"]}",
+            "{\"Phrase\": \"helicopter\", \"Full caption\": \"People are walking towards a helicopter on the dirt.\", \"Enhanced phrase\": [\"Rotary-wing aircraft\", \"Twin-blade helicopter\", \"Air transportation\"]}",
+            "{\"Phrase\": \"sunglasses\", \"Full caption\": \"A man with sunglasses and hat in front of a clock.\", \"Enhanced phrase\": [\"Tinted lenses\", \"Fashion accessory\", \"UV protection glasses\", \"Stylish eyewear\", \"Sun-blocking sunglasses\"]}",
+            "{\"Phrase\": \"drink\", \"Full caption\": \"A person is holding some drink and on a computer.\", \"Enhanced phrase\": [\"Hot beverage\", \"Coffee mug\", \"Tea cup\", \"Refreshing drink\", \"Drink in hand\"]}",
+            "{\"Phrase\": \"candle\", \"Full caption\": \"A slice of cake served with a candle on top.\", \"Enhanced phrase\": [\"Wax candle\", \"Burning flame\", \"Cake decoration\"]}",
+            "{\"Phrase\": \"orangutan\", \"Full caption\": \"An orangutan peeling a banana in front of a red wall.\", \"Enhanced phrase\": [\"Furry orangutan\", \"Primate with strong hands\", \"Intelligent ape\", \"Orangutan with brown eyes\", \"Orangutan in natural habitat\"]}",
+            "{\"Phrase\": \"laptop\", \"Full caption\": \"A person is holding some food and on a laptop.\", \"Enhanced phrase\": [\"Apple MacBook\", \"Backlit keyboard\", \"High-definition display\"]}",
+            "{\"Phrase\": \"hamburgers\", \"Full caption\": \"Two little girls and a woman sitting at a table preparing to eat some hamburgers.\", \"Enhanced phrase\": [\"Grilled hamburgers\", \"Burger buns\", \"Stacked patties\", \"Fast food item\"]}",
+            "{\"Phrase\": \"hula hoop\", \"Full caption\": \"A person is playing with a hula hoop.\", \"Enhanced phrase\": [\"Colorful hula hoop\", \"Plastic toy\", \"Circular object\", \"Spinning hoop\"]}",
+            "{\"Phrase\": \"cat\", \"Full caption\": \"A cat is chasing a frisbee in a park\", \"Enhanced phrase\": [\"Siamese cat\", \"blue eyes\", \"cream-colored coat\", \"legs up in the air\"]}",
+            "{\"Phrase\": \"woman\", \"Full caption\": \"A woman is practicing yoga in a tranquil garden\", \"Enhanced phrase\": [\"brunette woman\", \"practicing tree pose\", \"wearing light yoga gear\"]}",
+            "{\"Phrase\": \"cowboy\", \"Full caption\": \"A cowboy is riding a horse in the desert\", \"Enhanced phrase\": [\"bandana around his neck\", \"wearing wide-brimmed hat\"]}",
+            "{\"Phrase\": \"teenager\", \"Full caption\": \"A teenager is playing a shiny saxophone in a brick alley\", \"Enhanced phrase\": [\"teenager\", \"young\", \"in casual jeans\"]}",
+            "{\"Phrase\": \"businessman\", \"Full caption\": \"A businessman is selling fruits at a bustling market\", \"Enhanced phrase\": [\"light linen shirt and khaki pants\"]}",
+            "{\"Phrase\": \"girl\", \"Full caption\": \"A girl is riding a horse in the desert\", \"Enhanced phrase\": [\"young girl\", \"girl on horse\", \"in lightweight attire\", \"leather boots and gloves\"]}",
+            "{\"Phrase\": \"police\", \"Full caption\": \"A police is standing at the peak of a mountain\", \"Enhanced phrase\": [\"police officer\", \"in navy blue uniform\", \"radiating authority\"]}",
+            "{\"Phrase\": \"diver\", \"Full caption\": \"A diver is pulling a net out of the sea\", \"Enhanced phrase\": [\"scuba diver\", \"in sleek wetsuit\"]}",
+            "{\"Phrase\": \"mother\", \"Full caption\": \"A mother is making a sandcastle at the seaside\", \"Enhanced phrase\": [\"mother\", \"touching sand\"]}",
+            "{\"Phrase\": \"street musician\", \"Full caption\": \"A street musician is playing the harp downtown\", \"Enhanced phrase\": [\"street musician\"]}"
+        ],
+        "attribute": [
+            "{\"Phrase\": \"untouched pizza\", \"Full caption\": \"A box with an untouched pizza sitting inside of it\", \"Enhanced phrase\": [\"Freshly baked pizza\", \"Pizza with intact toppings\", \"Full pizza pie\"]}",
+            "{\"Phrase\": \"a purple plate\", \"Full caption\": \"A purple plate topped with a cut in half sandwich with eggs.\", \"Enhanced phrase\": [\"plate\", \"round\", \"deep purple\", \"glossy finish\"]}",
+            "{\"Phrase\": \"green container\", \"Full caption\": \"Apples inside a green container and a cardboard box of bananas.\", \"Enhanced phrase\": [\"green container\", \"matte finish\", \"lime green color\"]}",
+            "{\"Phrase\": \"transparent bowl\", \"Full caption\": \"Some sliced bananas are in a transparent bowl\", \"Enhanced phrase\": [\"transparent bowl\", \"clear bowl\", \"glass bowl\", \"rimless and simple\"]}",
+            "{\"Phrase\": \"wooden table\", \"Full caption\": \"A chef is chopping vegetables on a wooden table\", \"Enhanced phrase\": [\"wooden table\", \"solid oak\", \"deep oak grain\"]}",
+            "{\"Phrase\": \"wooden rod\", \"Full caption\": \"A man is fishing on a rocky pier with a wooden rod\", \"Enhanced phrase\": [\"wooden rod\", \"made of wood\", \"bamboo with natural knots\"]}",
+            "{\"Phrase\": \"rectangular mat\", \"Full caption\": \"A group is having a picnic on a long rectangular mat\", \"Enhanced phrase\": [\"rectangular mat\", \"long mat\", \"woven with colorful patterns\", \"vivid stripes and patterns\"]}",
+            "{\"Phrase\": \"velvet jacket\", \"Full caption\": \"A girl in a velvet jacket is sitting under a plastic umbrella\", \"Enhanced phrase\": [\"velvet jacket\", \"deep burgundy\", \"soft to the touch\", \"girl's dress\", \"burgundy hue\"]}",
+            "{\"Phrase\": \"elderly man\", \"Full caption\": \"An elderly man is feeding pigeons in the square\", \"Enhanced phrase\": [\"elderly man\", \"wrinkles with wisdom\", \"scattering seeds\"]}",
+            "{\"Phrase\": \"polka dot dress\", \"Full caption\": \"A girl wearing a polka dot dress is blowing bubbles on a windy afternoon\", \"Enhanced phrase\": [\"polka dot dress\", \"contrast of black on white\"]}",
+            "{\"Phrase\": \"cyclists with reflective jackets\", \"Full caption\": \"Two cyclists with reflective jackets are traversing a bridge at sunset\", \"Enhanced phrase\": [\"reflective jackets\", \"neon glow\"]}",
+            "{\"Phrase\": \"kids in school uniforms\", \"Full caption\": \"A group of kids in school uniforms are eagerly watching a puppet show in the park\", \"Enhanced phrase\": [\"school uniforms\", \"crisp navy and white\"]}",
+            "{\"Phrase\": \"large camera\", \"Full caption\": \"A photographer with a large camera is capturing the vibrant cityscape from a rooftop\", \"Enhanced phrase\": [\"large camera\", \"professional grade\", \"DSLR with a bulky lens\"]}",
+            "{\"Phrase\": \"chef in a white apron\", \"Full caption\": \"A chef in a white apron is preparing sushi in a modern kitchen\", \"Enhanced phrase\": [\"white apron\", \"starched and clean\"]}",
+            "{\"Phrase\": \"surfer with a blue wetsuit\", \"Full caption\": \"A surfer with a blue wetsuit is riding a large wave with dolphins\", \"Enhanced phrase\": [\"blue wetsuit\", \"blue color\"]}",
+            "{\"Phrase\": \"shiny trumpet\", \"Full caption\": \"A teenager is playing a shiny trumpet in a brick alley\", \"Enhanced phrase\": [\"shiny trumpet\", \"gleaming brass\"]}",
+            "{\"Phrase\": \"red dress\", \"Full caption\": \"A girl in a red dress is holding a pink balloon\", \"Enhanced phrase\": [\"red dress\", \"girl in red dress\", \"beautiful cloth\" \"ruby red with a twirl\"]}",
+            "{\"Phrase\": \"black car\", \"Full caption\": \"A black car is parked next to a white wall\", \"Enhanced phrase\": [\"black car\", \"toyota car\", \"sleek matte finish\"]}"
+        ]
+    }
+}
