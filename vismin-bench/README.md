@@ -43,5 +43,5 @@ You should predict the answer for each question based on the question and the im
 
 ## How to evaluate your model
 
-See an example of how to evaluate CLIP model in the `eval.py` file.
+See an example of how to evaluate the CLIP model in the `eval.py` file. An extensive list of models and their scripts are provided in this folder https://github.com/rabiulcste/vismin/tree/master/evals.
 
