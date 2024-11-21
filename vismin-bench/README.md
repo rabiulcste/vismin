@@ -7,7 +7,7 @@ The VisMin Benchmark is designed to evaluate models on minimal-change tasks invo
 
 ## Dataset
 
-Please download the dataset from [https://huggingface.co/datasets/mair-lab/vismin-bench].
+Please download the dataset from https://huggingface.co/datasets/mair-lab/vismin-bench.
 
 ## Evaluation Types
 
@@ -33,7 +33,7 @@ The ground truth is available in the `solutions/sim_solution.csv` file.
 
 ### 2. Multimodal LLMs
 
-This task involves visual question answering with four binary (yes/no) questions, four questions per sample. The submission format is a csv file with five columns: `id`, `Pred_Q0`, `Pred_Q1`, `Pred_Q2`, `Pred_Q3`.
+This task involves visual question answering with four binary (yes/no) questions, four questions per sample. The submission format is a csv file with five columns: `id`, `Text_Q0`, `Text_Q1`, `Image_Q0`, `Image_Q1`.
 
 ```bash
 id,Pred_Q0,Pred_Q1,Pred_Q2,Pred_Q3
