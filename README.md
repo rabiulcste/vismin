@@ -5,6 +5,8 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2306.08832-B31B1B.svg)](https://arxiv.org/abs/2306.08832)  [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-VisMin-FFD700.svg)](https://huggingface.co/collections/mair-lab/vismin-6695660f4c450902c8aff434)
 
+**🎉 Accepted to NeurIPS 2024! 🎉**
+
 
 ## Table of Contents
 - [Dataset](#dataset)
@@ -23,8 +25,11 @@ The training dataset has 64,392 samples, and the VisMin dataset has 2,084 sample
 - **Training Data:** 64,392 samples from VSR and COCO 2017 training split.
 - **Benchmark Data:** 2,084 samples from COCO 2017 validation split, human-verified.
 
+🔥 Exciting News! 🔥 The VisMin benchmark dataset is now available 🎉 Check it out [here](https://huggingface.co/datasets/mair-lab/vismin-bench) 🤗 
 
-Example of a dataset entry: 
+
+
+Example of a dataset entry in the training dataset: 
 ```json
 {
   "image_path": "/coco/images/train2017/000000234136.jpg",
@@ -138,8 +143,15 @@ pip install -r requirements.txt
 
 
 ## Acknowledgements
-The codebase is built on top of the following repositories:
-- [open_clip](https://github.com/mlfoundations/open_clip)
-- [Enhance-FineGrained](https://github.com/lezhang7/Enhance-FineGrained)
-- [GLIGEN](https://github.com/gligen/GLIGEN)
-- [FastChat](https://github.com/lm-sys/FastChat)
+The codebase is built on top of the following repositories: [open_clip](https://github.com/mlfoundations/open_clip), [Enhance-FineGrained](https://github.com/lezhang7/Enhance-FineGrained), [GLIGEN](https://github.com/gligen/GLIGEN), [FastChat](https://github.com/lm-sys/FastChat)
+
+# Citation
+If you find this work useful for your research, please consider citing our paper:
+```
+@article{awal2024vismin,
+  title={VisMin: Visual Minimal-Change Understanding},
+  author={Awal, Rabiul and Ahmadi, Saba and Zhang, Le and Agrawal, Aishwarya},
+  journal={arXiv preprint arXiv:2401.08832},
+  year={2024}
+}
+```
