@@ -68,6 +68,7 @@ class BLIPModelWrapper:
             med_config=config["med_config"],
         )
         self.model = model.to(device)
+        self.model.eval()
         self.device = device
 
     def download(self):
