@@ -1,20 +1,21 @@
+import argparse
+import os
+
 import clip
+import pandas as pd
 import torch
+import torch.nn.functional as F
 from datasets import load_dataset, load_from_disk
 from torch.utils.data import Dataset
 from tqdm import tqdm
-import pandas as pd
+
 from metric import compute_contrastive_accuracy
-import os
-import torch.nn.functional as F
-import argparse
 
 # load vismin-bench dataset
-CUSTOM_PATH = os.path.dirname(__file__)
-DATA_PATH = os.path.join(CUSTOM_PATH, "data")
+DATA_PATH = ""  # set your HF dataset path
 dataset_dict = load_from_disk(DATA_PATH)
 test_dataset = dataset_dict["test"]
-print(test_dataset)
+print(f"Dataset loaded successfully {len(test_dataset)} samples")
 
 # load clip model
 clip_model, preprocess = clip.load("ViT-B/32", device="cuda")
@@ -33,7 +34,9 @@ if __name__ == "__main__":
         category = sample["category"]
 
         text_tokens = clip.tokenize([text_0, text_1]).to("cuda")
-        image_tokens = torch.stack([preprocess(image_0), preprocess(image_1)]).to("cuda")
+        image_tokens = torch.stack([preprocess(image_0), preprocess(image_1)]).to(
+            "cuda"
+        )
 
         # Compute T0_I0, T0_I1, T1_I0, T1_I1 using the CLIP model
         with torch.no_grad():
@@ -56,11 +59,10 @@ if __name__ == "__main__":
                     "category": category,
                 }
             )
-    ground_truth = pd.read_csv(os.path.join(CUSTOM_PATH, "solutions/sim_solution.csv"))
-    ground_truth = ground_truth.to_dict(orient="records")
-    assert len(predictions) == len(ground_truth), "Predictions and ground truth must have the same length"
 
-    metric_result = compute_contrastive_accuracy(predictions, ground_truth)
+    metric_result = compute_contrastive_accuracy(predictions)
     print(f"Result on VisMin-Bench: \n")
     for category, result in metric_result.items():
-        print(f"{category}: {result['text']:.4f}, {result['image']:.4f}, {result['group']:.4f}")
+        print(
+            f"{category}: {result['text']:.4f}, {result['image']:.4f}, {result['group']:.4f}"
+        )
